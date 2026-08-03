@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cks/relacion/v1",
+  "title": "Relación causal (arista del grafo)",
+  "description": "Ref.: Doc. 2 §5.1, Doc. 3 §7.3. Cada arista es una afirmación económica completa con condiciones de validez. El requisito pedagógico central del proyecto (explicar por qué una relación no aplica en un contexto dado) se fuerza mediante el campo obligatorio explicacion_si_error.",
+  "type": "object",
+  "required": [
+    "id",
+    "origen",
+    "destino",
+    "polaridad",
+    "modelos_validos",
+    "explicacion_si_error"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^rel-[a-z0-9-]+$",
+      "description": "Identificador único de la arista, p. ej. rel-oferta-monetaria-tasa-interes"
+    },
+    "origen": { "$ref": "cks/variable-ref/v1" },
+    "destino": { "$ref": "cks/variable-ref/v1" },
+    "polaridad": {
+      "enum": ["positiva", "negativa"],
+      "description": "Dirección del efecto de origen sobre destino (Doc. 2 §5.1)"
+    },
+    "fuerza_cualitativa": {
+      "enum": ["fuerte", "moderada", "condicional"],
+      "description": "Doc. 2 §5.1; 'condicional' exige al menos un elemento en supuestos_requeridos"
+    },
+    "modelos_validos": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "Modelos en los que esta arista es válida, p. ej. IS-LM, AD-AS"
+    },
+    "supuestos_requeridos": {
+      "type": "array",
+      "items": { "$ref": "cks/supuesto-ref/v1" },
+      "description": "Condiciones bajo las cuales la arista aplica (Doc. 2 §5.1)"
+    },
+    "explicacion_si_error": {
+      "type": "string",
+      "minLength": 40,
+      "description": "Texto mostrado cuando el estudiante propone esta relación en un contexto donde no aplica. Autorado junto con la relación, no generado en tiempo de juego (Doc. 2 §5.1). Confirmación de corrección económica: responsabilidad del PO, fuera del alcance de este esquema (Doc. 3 §7.3, nota a)."
+    },
+    "explicaciones_distractoras": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Opciones para la re-explicación estructurada tras error de polaridad (Doc. 1 §5, Doc. 3 §2.2)"
+    }
+  },
+  "definitions": {
+    "variable-ref": {
+      "$id": "cks/variable-ref/v1",
+      "type": "string",
+      "description": "Referencia al id de una variable declarada en el catálogo del EKG (Doc. 2 §4.3). La validación de existencia contra el catálogo real se implementa en packages/cks/validate, no en este esquema de forma (Doc. 4, historia de integridad E0/S2)."
+    },
+    "supuesto-ref": {
+      "$id": "cks/supuesto-ref/v1",
+      "type": "string",
+      "description": "Referencia al id de un supuesto declarado en cks/supuesto.schema.json"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cks/evento/v1",
+  "title": "Evento (disparador de un escenario)",
+  "description": "Ref.: Doc. 2 §9, Doc. 3 §7.3.",
+  "type": "object",
+  "required": [
+    "id",
+    "nombre",
+    "familia",
+    "agente_origen",
+    "variables_afectadas"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^evt-[a-z0-9-]+$" },
+    "nombre": { "type": "string" },
+    "familia": {
+      "enum": ["fiscal", "monetaria", "choque_externo", "choque_expectativas"]
+    },
+    "agente_origen": { "$ref": "cks/agente-ref/v1" },
+    "variables_afectadas": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["variable", "direccion", "magnitud_cualitativa"],
+        "properties": {
+          "variable": { "$ref": "cks/variable-ref/v1" },
+          "direccion": { "enum": ["sube", "baja"] },
+          "magnitud_cualitativa": { "enum": ["leve", "moderada", "fuerte"] }
+        }
+      }
+    },
+    "modelos_disponibles": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

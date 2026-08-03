@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cks/supuesto/v1",
+  "title": "Supuesto de modelo",
+  "description": "Ref.: Doc. 2 §5.1, §7.1, §7.3; Doc. 3 §4.4. Un supuesto condiciona si una arista de fuerza_cualitativa 'condicional' está habilitada, y se muestra al estudiante como chip persistente en cabecera de escenario.",
+  "type": "object",
+  "required": ["id", "nombre", "explicacion_corta"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$",
+      "description": "p. ej. precios_fijos, economia_cerrada, expectativas_estaticas (Doc. 3 §4.4)"
+    },
+    "nombre": { "type": "string" },
+    "explicacion_corta": {
+      "type": "string",
+      "maxLength": 220,
+      "description": "Explicación en lenguaje llano de dos frases para el chip 'explicación al toque' (Doc. 3 §4.4), p. ej. 'Precios fijos: en el corto plazo de este modelo, las empresas ajustan cantidades, no precios.'"
+    },
+    "modelos_donde_aplica": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "relajado_por": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "IDs de modelos que relajan este supuesto (Doc. 2 §7.2), p. ej. AD-AS relaja precios_fijos"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cks/agente/v1",
+  "title": "Agente económico",
+  "description": "Ref.: Doc. 2 §3. Los seis agentes de la versión IS-LM (Sector externo puede existir en el catálogo con activo=false hasta que se habilite Mundell-Fleming, Doc. 2 §3).",
+  "type": "object",
+  "required": ["id", "nombre", "voz_institucional", "variables_controladas"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "enum": [
+        "banco-central",
+        "gobierno",
+        "empresas",
+        "hogares",
+        "sistema-financiero",
+        "sector-externo"
+      ]
+    },
+    "nombre": { "type": "string", "description": "Nombre conceptual del agente, p. ej. 'Banco Central'" },
+    "voz_institucional": {
+      "type": "string",
+      "description": "Nombre narrativo institucional usado en el juego (Doc. 3 §6.2), p. ej. 'Banco Central de Cordavia'"
+    },
+    "variables_controladas": {
+      "type": "array",
+      "items": { "$ref": "cks/variable-ref/v1" },
+      "minItems": 1
+    },
+    "variables_recibidas": {
+      "type": "array",
+      "items": { "$ref": "cks/variable-ref/v1" },
+      "description": "Variables que afectan las decisiones del agente sin que él las controle (Doc. 2 §3)"
+    },
+    "activo": {
+      "type": "boolean",
+      "default": true,
+      "description": "false para agentes presentes en el catálogo pero sin aristas habilitadas en el modelo actual, p. ej. Sector externo en IS-LM puro (Doc. 2 §3)"
+    }
+  }
+}

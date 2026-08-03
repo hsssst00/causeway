@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cks/escenario/v1",
+  "title": "Escenario",
+  "description": "Ref.: Doc. 2 §10, §11.3 (proceso de curación). Cada tipo de escenario es una configuración de recorrido sobre el mismo grafo, no una estructura de datos distinta (Doc. 2 §10).",
+  "type": "object",
+  "required": ["id", "tipo", "nivel", "modelo", "eventos", "supuestos_activos", "estado_curacion"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^esc-[a-z0-9-]+$" },
+    "tipo": {
+      "enum": ["simple", "compuesto", "diagnostico", "simulacion_abierta"],
+      "description": "Doc. 2 §10"
+    },
+    "nivel": {
+      "enum": ["0", "I", "II", "III", "IV", "V"],
+      "description": "Nivel pedagógico asociado (Doc. 1 §2, Doc. 3 §2.4)"
+    },
+    "modelo": {
+      "type": "string",
+      "description": "Modelo cuyo perfil de validez habilita este escenario (Doc. 2 §7.1)"
+    },
+    "eventos": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "IDs de eventos que disparan el escenario. Más de uno solo es válido si tipo=compuesto (Doc. 2 §10)"
+    },
+    "supuestos_activos": {
+      "type": "array",
+      "items": { "$ref": "cks/supuesto-ref/v1" }
+    },
+    "mecanismo_esperado": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "IDs de relación que componen al menos un camino consistente de referencia. No es la única respuesta válida: el CRE valida consistencia, no coincidencia exacta (Doc. 2 §5.3)."
+    },
+    "estado_curacion": {
+      "enum": ["borrador", "esquema_validado", "revision_economica", "revision_pedagogica", "publicado"],
+      "description": "Refleja el pipeline de curación de Doc. 2 §11.3, convertido en checklist de PR en Doc. 5 §3.1"
+    }
+  }
+}

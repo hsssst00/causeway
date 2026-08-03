@@ -1,0 +1,74 @@
+name: fronteras
+
+# Ref.: Doc. 0 §4, Doc. 5 §2.1 (tabla de dependencias por paquete).
+# Cada regla de la tabla de Doc. 5 §2.1 es un job de CI que rompe el build
+# ante una ruta de importación prohibida, no una convención de revisión manual.
+#
+# Estado S1: los paquetes de packages/*/src están vacíos (solo .gitkeep).
+# Este workflow falla intencionalmente mientras eso sea cierto (Doc. 5 §5,
+# paso 1: "evita que el pipeline quede verde por default sin verificar nada").
+# Deja de fallar por esta razón en cuanto exista código real en al menos
+# un paquete; a partir de ahí, el job de verificación real de fronteras
+# (import-boundaries) es el que debe mantenerse en verde.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  placeholder-fails-until-real-code-exists:
+    name: "Bloqueo intencional: aún no hay código real en packages/*/src"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verificar que exista al menos un archivo de código real
+        run: |
+          # Cuenta archivos fuente reales (no .gitkeep) en cualquier packages/*/src
+          count=$(find packages -path '*/src/*' -type f ! -name '.gitkeep' | wc -l)
+          if [ "$count" -eq 0 ]; then
+            echo "::error::No existe código real en ningún packages/*/src todavía."
+            echo "::error::Este job falla a propósito (Doc. 5 §5) para que el pipeline"
+            echo "::error::no quede 'verde por default' sin verificar nada. Elimina este"
+            echo "::error::job y activa 'import-boundaries' de abajo en cuanto exista"
+            echo "::error::al menos un paquete real."
+            exit 1
+          fi
+
+  import-boundaries:
+    name: "Reglas de dependencia (Doc. 5 §2.1)"
+    runs-on: ubuntu-latest
+    # No se ejecuta hasta que el job placeholder de arriba deje de fallar,
+    # es decir, hasta que exista código real que pueda tener imports que
+    # verificar. Se deja definido ahora para no reescribir la tabla de
+    # reglas más adelante bajo presión de sprint.
+    if: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verificar fronteras de importación por paquete
+        run: |
+          set -e
+          # Tabla de Doc. 5 §2.1 — un bloque por paquete origen.
+          # cre: solo puede importar cks/validate.
+          if grep -rlE "from ['\"](\.\./)*(ate|lsm|api|policylab-client)" packages/cre/src 2>/dev/null; then
+            echo "::error::packages/cre importa de un paquete no permitido (Doc. 0 §4.1, §4.5)"; exit 1
+          fi
+          # ate: no puede importar policylab-client ni ekg-macro como contenido crudo.
+          if grep -rlE "from ['\"](\.\./)*(policylab-client)" packages/ate/src 2>/dev/null; then
+            echo "::error::packages/ate importa policylab-client (Doc. 0 §3.4)"; exit 1
+          fi
+          # lsm: no puede importar cre, ate ni policylab-client.
+          if grep -rlE "from ['\"](\.\./)*(cre|ate|policylab-client)" packages/lsm/src 2>/dev/null; then
+            echo "::error::packages/lsm importa un paquete no permitido (Doc. 0 §3.5)"; exit 1
+          fi
+          # api: no puede importar policylab-client.
+          if grep -rlE "from ['\"](\.\./)*(policylab-client)" packages/api/src 2>/dev/null; then
+            echo "::error::packages/api importa policylab-client (Doc. 0 §4.4)"; exit 1
+          fi
+          # policylab-client: no puede importar cre, ate ni lsm como código
+          # (solo el contrato HTTP publicado de api).
+          if grep -rlE "from ['\"](\.\./)*(cre|ate|lsm)['\"/]" packages/policylab-client/src 2>/dev/null; then
+            echo "::error::policylab-client importa un motor directamente (Doc. 0 §4.4)"; exit 1
+          fi
+          echo "Fronteras verificadas sin violaciones."
