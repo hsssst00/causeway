@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "cks/escenario/v1",
+  "$id": "cks-escenario-v1",
   "title": "Escenario",
   "description": "Ref.: Doc. 2 §10, §11.3 (proceso de curación). Cada tipo de escenario es una configuración de recorrido sobre el mismo grafo, no una estructura de datos distinta (Doc. 2 §10).",
   "type": "object",
@@ -27,7 +27,7 @@
     },
     "supuestos_activos": {
       "type": "array",
-      "items": { "$ref": "cks/supuesto-ref/v1" }
+      "items": { "$ref": "cks-supuesto-ref-v1" }
     },
     "mecanismo_esperado": {
       "type": "array",

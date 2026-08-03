@@ -1,0 +1,17 @@
+{
+  "name": "@causeway/cks-validate",
+  "version": "0.1.0",
+  "description": "Librería de validación del Causal Knowledge Schema (CKS). Ref.: Doc. 0 §3.6, Doc. 3 §7.3.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --colors=false"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2"
+  }
+}

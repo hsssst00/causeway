@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "cks/evento/v1",
+  "$id": "cks-evento-v1",
   "title": "Evento (disparador de un escenario)",
   "description": "Ref.: Doc. 2 §9, Doc. 3 §7.3.",
   "type": "object",
@@ -17,7 +17,7 @@
     "familia": {
       "enum": ["fiscal", "monetaria", "choque_externo", "choque_expectativas"]
     },
-    "agente_origen": { "$ref": "cks/agente-ref/v1" },
+    "agente_origen": { "$ref": "cks-agente-ref-v1" },
     "variables_afectadas": {
       "type": "array",
       "minItems": 1,
@@ -25,7 +25,7 @@
         "type": "object",
         "required": ["variable", "direccion", "magnitud_cualitativa"],
         "properties": {
-          "variable": { "$ref": "cks/variable-ref/v1" },
+          "variable": { "$ref": "cks-variable-ref-v1" },
           "direccion": { "enum": ["sube", "baja"] },
           "magnitud_cualitativa": { "enum": ["leve", "moderada", "fuerte"] }
         }

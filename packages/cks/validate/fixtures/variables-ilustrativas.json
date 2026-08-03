@@ -1,0 +1,12 @@
+{
+  "_nota": "Fixture ilustrativo para la historia 3 (E0, redefinida en Sprint Planning de S1): valida las reglas de integridad contra los fragmentos de Doc. 2 §3 y §5.2, NO contra el catálogo real del EKG (que es historia de E2, S2, Doc. 2 §4.3). No es un esquema CKS ni forma parte de packages/cks/schema.",
+  "variables": [
+    { "id": "oferta-monetaria", "agente": "banco-central" },
+    { "id": "tasa-interes", "agente": "banco-central" },
+    { "id": "inversion", "agente": "empresas" },
+    { "id": "demanda-agregada", "agente": "empresas" },
+    { "id": "produccion", "agente": "empresas" },
+    { "id": "ingreso", "agente": "hogares" },
+    { "id": "consumo", "agente": "hogares" }
+  ]
+}

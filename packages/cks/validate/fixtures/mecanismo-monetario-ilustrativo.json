@@ -1,0 +1,76 @@
+{
+  "_nota": "Fixture ilustrativo (Doc. 2 §5.2, política monetaria expansiva). Usado para probar los 5 esquemas CKS y las reglas de integridad de la historia 3, redefinida en Sprint Planning de S1 contra fragmentos ilustrativos.",
+  "relaciones": [
+    {
+      "id": "rel-oferta-monetaria-tasa-interes",
+      "origen": "oferta-monetaria",
+      "destino": "tasa-interes",
+      "polaridad": "negativa",
+      "fuerza_cualitativa": "fuerte",
+      "modelos_validos": ["IS-LM"],
+      "explicacion_si_error": "Un aumento de la oferta monetaria reduce la tasa de interés de equilibrio en el mercado de dinero; esta relación no aplica si el supuesto de precios fijos no está activo."
+    },
+    {
+      "id": "rel-tasa-interes-inversion",
+      "origen": "tasa-interes",
+      "destino": "inversion",
+      "polaridad": "negativa",
+      "fuerza_cualitativa": "fuerte",
+      "modelos_validos": ["IS-LM"],
+      "explicacion_si_error": "Una tasa de interés más baja reduce el costo de financiar inversión, por lo que la inversión sube; la relación se invierte si se confunde con el efecto sobre el ahorro."
+    },
+    {
+      "id": "rel-inversion-demanda-agregada",
+      "origen": "inversion",
+      "destino": "demanda-agregada",
+      "polaridad": "positiva",
+      "fuerza_cualitativa": "fuerte",
+      "modelos_validos": ["IS-LM"],
+      "explicacion_si_error": "La inversión es un componente de la demanda agregada; un aumento de inversión aumenta la demanda agregada de forma directa, no indirecta."
+    },
+    {
+      "id": "rel-demanda-agregada-produccion",
+      "origen": "demanda-agregada",
+      "destino": "produccion",
+      "polaridad": "positiva",
+      "fuerza_cualitativa": "fuerte",
+      "modelos_validos": ["IS-LM"],
+      "explicacion_si_error": "Con precios fijos, las empresas ajustan producción para satisfacer la demanda agregada; sin ese supuesto, parte del ajuste podría ir a precios en vez de cantidades."
+    },
+    {
+      "id": "rel-produccion-ingreso",
+      "origen": "produccion",
+      "destino": "ingreso",
+      "polaridad": "positiva",
+      "fuerza_cualitativa": "fuerte",
+      "modelos_validos": ["IS-LM"],
+      "explicacion_si_error": "La producción agregada se distribuye como ingreso a los hogares; son dos caras de la misma identidad contable en el corto plazo."
+    },
+    {
+      "id": "rel-ingreso-consumo",
+      "origen": "ingreso",
+      "destino": "consumo",
+      "polaridad": "positiva",
+      "fuerza_cualitativa": "moderada",
+      "modelos_validos": ["IS-LM"],
+      "explicacion_si_error": "El consumo depende del ingreso disponible según la propensión marginal a consumir; la fuerza es moderada porque parte del ingreso adicional se ahorra."
+    }
+  ],
+  "escenario": {
+    "id": "esc-monetaria-expansiva-illustrativo",
+    "tipo": "simple",
+    "nivel": "II",
+    "modelo": "IS-LM",
+    "eventos": ["evt-aumento-oferta-monetaria"],
+    "supuestos_activos": ["precios_fijos", "economia_cerrada"],
+    "mecanismo_esperado": [
+      "rel-oferta-monetaria-tasa-interes",
+      "rel-tasa-interes-inversion",
+      "rel-inversion-demanda-agregada",
+      "rel-demanda-agregada-produccion",
+      "rel-produccion-ingreso",
+      "rel-ingreso-consumo"
+    ],
+    "estado_curacion": "esquema_validado"
+  }
+}

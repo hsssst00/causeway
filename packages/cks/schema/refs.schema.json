@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cks-refs-v1",
+  "description": "Sub-esquemas de referencia (variable-ref, agente-ref, supuesto-ref) usados por $ref desde relacion, evento, agente, supuesto y escenario. Se centralizan aquí para que exista una sola fuente de verdad, en vez de duplicarse dentro de cada esquema (bug detectado al correr los tests: evento.schema.json referenciaba cks-agente-ref-v1 sin que existiera).",
+  "definitions": {
+    "variable-ref": {
+      "$id": "cks-variable-ref-v1",
+      "type": "string",
+      "description": "Referencia al id de una variable declarada en el catálogo del EKG (Doc. 2 §4.3). La validación de existencia contra el catálogo real se implementa en packages/cks/validate/reglas-integridad.js, no en este esquema de forma."
+    },
+    "agente-ref": {
+      "$id": "cks-agente-ref-v1",
+      "type": "string",
+      "enum": [
+        "banco-central",
+        "gobierno",
+        "empresas",
+        "hogares",
+        "sistema-financiero",
+        "sector-externo"
+      ],
+      "description": "Referencia al id de uno de los seis agentes de Doc. 2 §3."
+    },
+    "supuesto-ref": {
+      "$id": "cks-supuesto-ref-v1",
+      "type": "string",
+      "description": "Referencia al id de un supuesto declarado en cks/supuesto.schema.json"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+name: tests
+
+# Ref.: Doc. 4 §6.2 (DoD: "el código asociado pasa CI"). Corre la suite de
+# cada paquete que ya tenga tests reales. Ignora silenciosamente los
+# paquetes que todavía no tienen código (packages/*/src con solo .gitkeep)
+# — a diferencia de .ci/fronteras.yml, aquí NO se busca fallar
+# intencionalmente: un paquete vacío no es una violación de ninguna regla,
+# solo trabajo que no ha empezado (Doc. 5 §5 solo exige el fallo
+# intencional para fronteras, no para tests).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  discover-and-test:
+    name: "Ejecutar tests de cada paquete con package.json"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Ejecutar tests de packages/cks/validate
+        working-directory: packages/cks/validate
+        run: |
+          if [ -f package.json ]; then
+            npm install
+            npm test
+          else
+            echo "Sin package.json todavía — se omite (Doc. 5 §5 no exige fallo intencional aquí)."
+          fi
+
+      - name: Buscar otros paquetes con package.json (informativo)
+        run: |
+          echo "Paquetes con package.json detectados:"
+          find packages -maxdepth 3 -name package.json -not -path '*/node_modules/*'
+          echo "Los paquetes sin package.json (cre, ate, lsm, api, policylab-client)"
+          echo "no tienen tests propios todavía — historias fuera del alcance de S1."
