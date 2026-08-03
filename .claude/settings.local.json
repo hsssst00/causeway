@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(touch docs/00-identidad-y-arquitectura.md)",
+      "Bash(touch docs/01-diseno-pedagogico.md)",
+      "Bash(touch docs/02-diseno-economico.md)",
+      "Bash(touch docs/03-gdd-policylab.md)",
+      "Bash(touch docs/04-programa-gestion-scrum.md)"
+    ]
+  }
+}

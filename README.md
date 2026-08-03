@@ -12,12 +12,12 @@ Los documentos se escribieron —y se leen mejor— en este orden:
  
 | # | Documento | Qué responde |
 |---|---|---|
-| 0 | [Identidad y Arquitectura](documento-0-identidad-y-arquitectura.md) | Qué componentes existen, cómo se llaman, qué naturaleza tiene cada uno y qué reglas de dependencia los gobiernan. **Documento normativo: fija la nomenclatura de todo el corpus.** |
-| 1 | [Diseño Pedagógico](documento-1-diseno-pedagogico.md) | Cómo se aprende en el sistema: niveles, andamiaje, retroalimentación, motivación y qué se mide (y qué se prohíbe medir). |
-| 2 | [Diseño Económico](documento-2-diseno-economico.md) | Cómo se modela el conocimiento macroeconómico: agentes, variables, relaciones causales, supuestos, modelos y el proceso de curación del contenido. |
-| 3 | [Game Design Document](documento-3-gdd-policylab.md) | Cómo se juega PolicyLab: experiencia central, sistemas, interfaz, arquitectura de software y plan de producción. |
-| 4 | [Programa de Gestión Scrum](documento-4-programa-gestion-scrum.md) | Cómo se construye: sprints, backlog por épicas, roles adaptados a un equipo con agentes de IA, y riesgos de proceso. |
-| 5 | [Repositorio y Tablero](documento-5-repositorio-y-tablero.md) | Cómo se organiza el trabajo: estructura de repositorios, CI que hace verificables las reglas de dependencia, y tablero de gestión. |
+| 0 | [Identidad y Arquitectura](docs/00-identidad-y-arquitectura.md) | Qué componentes existen, cómo se llaman, qué naturaleza tiene cada uno y qué reglas de dependencia los gobiernan. **Documento normativo: fija la nomenclatura de todo el corpus.** |
+| 1 | [Diseño Pedagógico](docs/01-diseno-pedagogico.md) | Cómo se aprende en el sistema: niveles, andamiaje, retroalimentación, motivación y qué se mide (y qué se prohíbe medir). |
+| 2 | [Diseño Económico](docs/02-diseno-economico.md) | Cómo se modela el conocimiento macroeconómico: agentes, variables, relaciones causales, supuestos, modelos y el proceso de curación del contenido. |
+| 3 | [Game Design Document](docs/03-gdd-policylab.md) | Cómo se juega PolicyLab: experiencia central, sistemas, interfaz, arquitectura de software y plan de producción. |
+| 4 | [Programa de Gestión Scrum](docs/04-programa-gestion-scrum.md) | Cómo se construye: sprints, backlog por épicas, roles adaptados a un equipo con agentes de IA, y riesgos de proceso. |
+| 5 | [Repositorio y Tablero](docs/05-repositorio-y-tablero.md) | Cómo se organiza el trabajo: estructura de repositorios, CI que hace verificables las reglas de dependencia, y tablero de gestión. |
  
 Un lector con interés **pedagógico** puede leer 1 → 3 y consultar 0 solo como glosario. Un lector con interés **técnico** puede leer 0 → 5 → 3 (§7). Un lector con interés en la **gestión de proyectos con agentes de IA** puede ir directo al 4.
  
