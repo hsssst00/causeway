@@ -53,6 +53,36 @@ describe('Esquemas de evento, agente, supuesto, escenario (historia 2, E0)', () 
     expect(valido).toBe(false);
   });
 
+  test('acepta el evento ilustrativo (Doc. 2 §9) que dispara el escenario monetario', () => {
+    const { valido, errores } = validarDocumento('evento', fixtureMecanismo.evento);
+    expect(errores).toEqual([]);
+    expect(valido).toBe(true);
+  });
+
+  test('RECHAZA un evento con familia fuera del enum de Doc. 2 §9', () => {
+    const eventoInvalido = { ...fixtureMecanismo.evento, familia: 'sorpresa' };
+    const { valido } = validarDocumento('evento', eventoInvalido);
+    expect(valido).toBe(false);
+  });
+
+  test('RECHAZA un evento sin variables_afectadas', () => {
+    const eventoInvalido = { ...fixtureMecanismo.evento, variables_afectadas: [] };
+    const { valido } = validarDocumento('evento', eventoInvalido);
+    expect(valido).toBe(false);
+  });
+
+  test('acepta un agente válido con variables_controladas (Doc. 2 §3)', () => {
+    const agenteValido = {
+      id: 'banco-central',
+      nombre: 'Banco Central',
+      voz_institucional: 'Banco Central de Cordavia',
+      variables_controladas: ['oferta-monetaria', 'tasa-interes'],
+    };
+    const { valido, errores } = validarDocumento('agente', agenteValido);
+    expect(errores).toEqual([]);
+    expect(valido).toBe(true);
+  });
+
   test('RECHAZA un agente sin variables_controladas', () => {
     const agenteInvalido = { id: 'banco-central', nombre: 'Banco Central', voz_institucional: 'Banco Central de Cordavia' };
     const { valido } = validarDocumento('agente', agenteInvalido);
@@ -66,6 +96,15 @@ describe('Esquemas de evento, agente, supuesto, escenario (historia 2, E0)', () 
       explicacion_corta: 'En el corto plazo de este modelo, las empresas ajustan cantidades, no precios.',
     });
     expect(valido).toBe(true);
+  });
+
+  test('RECHAZA un supuesto sin explicacion_corta', () => {
+    const { valido, errores } = validarDocumento('supuesto', {
+      id: 'precios_fijos',
+      nombre: 'Precios fijos',
+    });
+    expect(valido).toBe(false);
+    expect(errores.some((e) => e.params && e.params.missingProperty === 'explicacion_corta')).toBe(true);
   });
 });
 

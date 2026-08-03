@@ -47,6 +47,23 @@ Ver `sprint-01.md` para el cierre completo de S1. Resumen operativo verificado h
 
 _(Esta sección se completa a medida que avanza el sprint — Claude Code y Claude registran aquí cada sesión de trabajo, ya que ninguno conserva memoria entre sesiones. Formato sugerido: fecha, quién, qué se hizo, qué queda pendiente.)_
 
+### 2026-08-03 — Claude Code
+
+**Qué se hizo (Brief de corrección, auditoría independiente 2026-08-03 — todas las tareas del brief, Bloque 1 y Bloque 2):**
+- **Tarea 1.1 (Hallazgo B2):** cobertura de test agregada para `evento` (caso positivo con el fixture ilustrativo — se añadió el campo `evento` a `fixtures/mecanismo-monetario-ilustrativo.json` — y dos negativos: `familia` fuera de enum, `variables_afectadas` vacío), `agente` (caso positivo, faltaba), `supuesto` (caso negativo — falta `explicacion_corta` —, faltaba). `packages/cks/validate`: 13 → **18 tests**, todos en verde (verificado con `npm test`, no solo declarado).
+- **Tarea 1.2 (Hallazgo B1):** lógica de `import-boundaries` extraída de `.ci/fronteras.yml` a `scripts/check-import-boundaries.sh` (recibe una carpeta raíz como argumento). Nuevo `scripts/test-check-import-boundaries.sh` construye fixtures sintéticos temporales (`cre` importando de `ate` → debe rechazar; `cre` importando de `cks/validate` → debe aceptar) y verifica ambos casos — corrido localmente, ambos pasan. `.ci/fronteras.yml` gana un job nuevo (`test-import-boundaries-logic`) que corre siempre, sin depender de `if: false`; el job `import-boundaries` ahora invoca el script en vez de tener la lógica inline. El job sigue con `if: false` — correcto, no se activa hasta que exista código real (Doc. 5, roadmap S5+).
+- **Tarea 1.3 (Hallazgo A3):** el PO proporcionó el contenido de `decisiones-arranque-scrum.md`. Se copió verbatim a `bitacora/decisiones-arranque-scrum.md` (sin reescribir ni resumir) y `sprint-01.md` §1 actualizó su referencia para apuntar a la ruta dentro del repo, con nota de procedencia. Antes vivía solo como documento externo fuera de control de versiones.
+- **Tarea 1.4 (Hallazgo A5):** `.claude/settings.local.json` sacado del índice de git (`git rm --cached`, el archivo local se conserva) y agregado a un `.gitignore` nuevo en la raíz del repo (no existía ninguno).
+- **Tarea 1.5 (Hallazgo A4):** `README.md` actualizado — ya no se describe el repositorio únicamente como "corpus de diseño"; se agregó la sección "Estado del repositorio" (fase F0, S1 cerrado, S2 en curso, contenido real de `packages/cks/schema`, `packages/cks/validate` y los tres workflows de `.ci/`). No se tocaron "Orden de lectura" ni "Glosario de componentes".
+- **Tarea 2.1 (Hallazgo A1):** el PO eligió la opción (b) — completar Doc. 3 §7.3 en vez de relajar el criterio de Doc. 4 §7. Se agregaron los fragmentos ilustrativos de `agente` y `supuesto` a `docs/03-gdd-policylab.md` §7.3 (faltaban; solo `relacion` y `evento` estaban cubiertos), con nota de diseño (d) explicando el enum cerrado de `agente.id` y el campo `activo`. Se actualizó §10 (cierre de referencias cruzadas) para reflejar los cuatro esquemas, y se agregó entrada 1.1 a la tabla de control de versiones de Doc. 3. Doc. 4 §7 queda sin cambios — su criterio original ya era correcto.
+- **Tarea 2.2 (Hallazgo B4), borrador:** creado `retro/sprint-01.md` como borrador explícito con la lista de preguntas abiertas para que el PO complete su reflexión — no se fabricó una retrospectiva completa sin ese insumo (habría repetido el problema que el propio hallazgo señala). Queda marcado como "BORRADOR" hasta que el PO la complete.
+
+**Qué queda pendiente:**
+- **Tarea 2.3 (Hallazgo C3):** sin acción en S2, correctamente — es una decisión de alcance para el Sprint Planning de S3 (fijar sprint límite para crear `ekg-macro`), no algo ejecutable a mitad de S2.
+- **Retro de S1** (`retro/sprint-01.md`): sigue en borrador hasta que el PO responda las preguntas abiertas.
+
+**Verificación de cierre:** `cd packages/cks/validate && npm test` → 18/18 en verde; `./scripts/test-check-import-boundaries.sh` → ambos casos pasan; `./scripts/check-import-boundaries.sh .` → sin violaciones contra el repo real.
+
 ## 5. Riesgos y bloqueos observados durante el sprint
 
 - Migración pendiente acumulada: `validate-bundle-fixture` (desde S1) + el catálogo puente de agentes/variables (desde S2) ambos deben trasladarse a `ekg-macro` cuando ese repositorio se cree. Riesgo de que la creación de `ekg-macro` siga postergándose sprint tras sprint si no se prioriza explícitamente — a vigilar en Sprint Planning de S3.
@@ -57,3 +74,5 @@ _(Esta sección se completa a medida que avanza el sprint — Claude Code y Clau
 | Versión | Fecha | Cambios |
 |---|---|---|
 | 1.0 | 2026-08-03 | Creación de la bitácora tras Sprint Planning de S2. |
+| 1.1 | 2026-08-03 | Entrada de trabajo: Bloque 1 del brief de corrección de la auditoría independiente (tareas 1.1, 1.2, 1.4, 1.5 cerradas; 2.2 en borrador). Tareas 1.3 y 2.1 bloqueadas pendientes de insumo/decisión del PO. |
+| 1.2 | 2026-08-03 | Tareas 1.3 (PO proporcionó `decisiones-arranque-scrum.md`) y 2.1 (PO eligió opción b) cerradas. Del brief de corrección solo queda 2.3, correctamente diferida a Sprint Planning de S3, y la retro de S1 en borrador a la espera del PO. |

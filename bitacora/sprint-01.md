@@ -9,7 +9,7 @@
 
 ## 1. Decisiones de arranque heredadas
 
-Ver `decisiones-arranque-scrum.md` (memoria de proyecto). Resumen operativo:
+Ver [`bitacora/decisiones-arranque-scrum.md`](decisiones-arranque-scrum.md) (copiada al repo en S2, Tarea 1.3 del brief de corrección de la auditoría independiente — Hallazgo A3; antes vivía solo como documento externo fuera de control de versiones). Resumen operativo:
 - El repositorio `causeway` aún no existe; su creación es el contenido mismo de S1.
 - Riesgo R1 (revisión económica no independiente): abierto, no bloqueante. PO en gestiones con docentes de cátedra.
 
@@ -83,3 +83,4 @@ _(Vacío al inicio del sprint.)_
 | 1.0 | 2026-08-02 | Creación de la bitácora tras Sprint Planning de S1. |
 | 1.1 | 2026-08-03 | Se agrega entrada de trabajo: primer borrador de los 5 esquemas CKS y de `.ci/fronteras.yml` (historias 1, 2 y 4). |
 | 1.2 | 2026-08-03 | **S1 cerrado.** Se agregan `docs/adr/0001`, `.ci/tests.yml`, `.ci/cks-lib.yml` (historia 5), `packages/cks/validate` (librería + 13 tests en verde), `reglas-integridad.js` (historia 3) y `packages/cks/schema/refs.schema.json` (corrección de un bug de referencias cruzadas detectado al implementar los tests). |
+| 1.3 | 2026-08-03 | §1: referencia a `decisiones-arranque-scrum.md` actualizada a su ruta dentro del repo (`bitacora/decisiones-arranque-scrum.md`), copiada verbatim en S2 (Tarea 1.3 del brief de corrección de la auditoría independiente, Hallazgo A3). |

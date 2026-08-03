@@ -1,8 +1,8 @@
-# PolicyLab / Causeway — Corpus de diseño
+# PolicyLab / Causeway
  
 **PolicyLab** es una simulación educativa basada en navegador en la que estudiantes de macroeconomía actúan como analistas que reconstruyen, paso a paso, los mecanismos causales detrás de eventos de política económica. El sistema evalúa el proceso de razonamiento — no la respuesta final — y valida la consistencia interna de cada cadena causal propuesta, no su coincidencia con una única respuesta canónica. PolicyLab es la primera aplicación construida sobre **Causeway**, una plataforma de orquestación diseñada para ser genérica respecto al dominio disciplinar.
  
-Este repositorio contiene el corpus completo de diseño del programa: seis documentos que cubren desde la identidad arquitectónica hasta la infraestructura operativa de desarrollo.
+Este repositorio contiene el corpus de diseño del programa (seis documentos que cubren desde la identidad arquitectónica hasta la infraestructura operativa de desarrollo) y su implementación en curso: el esquema de conocimiento causal (CKS), su librería de validación, y la CI que verifica ambos. El estado actual de la implementación se detalla en "Estado del repositorio", más abajo.
  
 ---
  
@@ -42,6 +42,15 @@ La nomenclatura completa y su justificación están en el Documento 0, §6. Resu
 Los nombres de componentes se mantienen en inglés (siglas citables y versionables); el contenido narrativo y pedagógico del programa está en español.
  
 ---
+ 
+## Estado del repositorio
+ 
+El programa se gestiona en sprints de dos semanas (Documento 4). Estado actual:
+ 
+- **Fase F0**, Sprint 1 cerrado (épicas E0 — CKS v1 — y E1 — arquitectura Causeway y CI de contenido); Sprint 2 en curso (arranque de E2 — EKG IS-LM v0). Detalle sprint a sprint en [`bitacora/`](bitacora/).
+- **`packages/cks/schema/`** — los cinco esquemas JSON del Causal Knowledge Schema: `relacion`, `evento`, `agente`, `supuesto`, `escenario` (más `refs.schema.json`, que centraliza las referencias compartidas entre ellos).
+- **`packages/cks/validate/`** — librería de validación (Ajv) que consume esos esquemas, con cobertura de test (positiva y negativa) para los cinco tipos y para las reglas de integridad de Doc. 2 §8.2.
+- **`.ci/`** — tres workflows: `fronteras.yml` (reglas de dependencia entre paquetes, Doc. 5 §2.1), `tests.yml` (corre la suite de cada paquete con `package.json`), `cks-lib.yml` (valida y empaqueta `packages/cks` como artefacto versionado).
  
 ## Estado del corpus
  

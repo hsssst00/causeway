@@ -56,6 +56,16 @@
       "explicacion_si_error": "El consumo depende del ingreso disponible según la propensión marginal a consumir; la fuerza es moderada porque parte del ingreso adicional se ahorra."
     }
   ],
+  "evento": {
+    "id": "evt-aumento-oferta-monetaria",
+    "nombre": "Aumento de la oferta monetaria",
+    "familia": "monetaria",
+    "agente_origen": "banco-central",
+    "variables_afectadas": [
+      { "variable": "oferta-monetaria", "direccion": "sube", "magnitud_cualitativa": "fuerte" }
+    ],
+    "modelos_disponibles": ["IS-LM"]
+  },
   "escenario": {
     "id": "esc-monetaria-expansiva-illustrativo",
     "tipo": "simple",

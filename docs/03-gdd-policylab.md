@@ -439,7 +439,7 @@ Se evaluaron dos topologías para Causeway. **Microservicios** (CRE, ATE, LSM co
 
 #### 7.3. Esquema de datos del contenido (cumple Doc. 2, referencias pendientes)
 
-El CKS se materializa como un conjunto de JSON Schema versionados. Fragmentos ilustrativos de las dos estructuras que el Documento 2 dejó pendientes (§5.1 relación; §9 evento) — el esquema completo es entregable de la fase F0:
+El CKS se materializa como un conjunto de JSON Schema versionados. Fragmentos ilustrativos de las cuatro estructuras que el Documento 2 dejó pendientes (§5.1 relación; §9 evento; §3 agente; §5.1/§7.1 supuesto) — el esquema completo es entregable de la fase F0:
 
 ```json
 // cks/relacion.schema.json (fragmento)
@@ -497,7 +497,48 @@ El CKS se materializa como un conjunto de JSON Schema versionados. Fragmentos il
 }
 ```
 
-Notas de diseño: (a) `explicacion_si_error` es obligatoria con longitud mínima — el esquema fuerza el requisito pedagógico central del proyecto; (b) los identificadores usan referencias (`variable-ref`) validadas contra el catálogo de variables, lo que automatiza el control de duplicados previsto en Doc. 2, §4.3; (c) todo bundle publicado lleva versión semántica y el LSM registra con qué versión de contenido se produjo cada interacción (reproducibilidad de la retroalimentación, Doc. 2, §8.2).
+```json
+// cks/agente.schema.json (fragmento)
+{
+  "$id": "cks/agente/v1",
+  "type": "object",
+  "required": ["id", "nombre", "voz_institucional", "variables_controladas"],
+  "properties": {
+    "id":     { "enum": ["banco-central", "gobierno", "empresas",
+                          "hogares", "sistema-financiero", "sector-externo"] },
+    "nombre": { "type": "string" },
+    "voz_institucional": { "type": "string" },
+    "variables_controladas": {
+      "type": "array", "items": { "$ref": "cks/variable-ref/v1" },
+      "minItems": 1
+    },
+    "variables_recibidas": {
+      "type": "array", "items": { "$ref": "cks/variable-ref/v1" }
+    },
+    "activo": { "type": "boolean", "default": true }
+  }
+}
+```
+
+```json
+// cks/supuesto.schema.json (fragmento)
+{
+  "$id": "cks/supuesto/v1",
+  "type": "object",
+  "required": ["id", "nombre", "explicacion_corta"],
+  "properties": {
+    "id":                { "type": "string", "pattern": "^[a-z0-9_]+$" },
+    "nombre":            { "type": "string" },
+    "explicacion_corta": { "type": "string", "maxLength": 220 },
+    "modelos_donde_aplica": { "type": "array", "items": { "type": "string" },
+                              "minItems": 1 },
+    "relajado_por":      { "type": "array", "items": { "type": "string" },
+                            "description": "IDs de modelos que relajan este supuesto (Doc. 2, §7.2)" }
+  }
+}
+```
+
+Notas de diseño: (a) `explicacion_si_error` es obligatoria con longitud mínima — el esquema fuerza el requisito pedagógico central del proyecto; (b) los identificadores usan referencias (`variable-ref`) validadas contra el catálogo de variables, lo que automatiza el control de duplicados previsto en Doc. 2, §4.3; (c) todo bundle publicado lleva versión semántica y el LSM registra con qué versión de contenido se produjo cada interacción (reproducibilidad de la retroalimentación, Doc. 2, §8.2); (d) `agente.id` usa un enum cerrado de seis valores porque los agentes de Doc. 2, §3 son un catálogo fijo, a diferencia de variables y relaciones, que crecen con cada modelo nuevo; `agente.activo` es lo que permite que Sector externo exista en el catálogo sin aristas habilitadas hasta que se active Mundell-Fleming (Doc. 2, §3), sin necesidad de un segundo esquema.
 
 #### 7.4. Base de datos
 
@@ -616,7 +657,7 @@ Este documento salda las referencias pendientes declaradas por los documentos an
 - **Doc. 1 — logros:** credenciales sin tiempo/volumen/rachas; exclusiones verificables (§3.2, §3.3). ✓
 - **Doc. 1 — UX de retroalimentación:** tres componentes de interfaz diferenciados (§3.5). ✓
 - **Doc. 1 — roadmap:** piloto de validación externa como fase F3 con instrumento pre/post (§8.2). ✓
-- **Doc. 2 — arquitectura:** JSON Schema de relación y evento (§7.3). ✓
+- **Doc. 2 — arquitectura:** JSON Schema de relación, evento, agente y supuesto (§7.3). ✓
 - **Doc. 2 — UI de supuestos:** chips persistentes con explicación y vínculo al error (§4.4). ✓
 - **Doc. 0 — nomenclatura y dependencias:** aplicadas en todo el documento; PolicyLab consume Causeway y no reimplementa motores (§7.1, §7.7). ✓
 
@@ -635,3 +676,4 @@ Además de los marcos pedagógicos y económicos heredados de los Documentos 1 y
 | Versión | Fecha | Cambios |
 |---|---|---|
 | 1.0 | 2026-08-01 | Publicación inicial |
+| 1.1 | 2026-08-03 | §7.3: se agregan los fragmentos ilustrativos de `agente` y `supuesto` (faltaban; solo `relacion` y `evento` estaban cubiertos). Corrige Hallazgo A1 de la auditoría independiente de 2026-08-03 — el criterio de aceptación de Doc. 4 §7 (historia 2, E0) exigía validar los cuatro esquemas contra fragmento ilustrativo de este documento, pero dos de los cuatro se habían diseñado sin fragmento previo (ver `bitacora/sprint-01.md`). §10 actualizado para reflejar la cobertura completa. |

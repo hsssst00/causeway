@@ -18,6 +18,17 @@ on:
     branches: [main]
 
 jobs:
+  test-import-boundaries-logic:
+    name: "Prueba de la lógica de fronteras (scripts/check-import-boundaries.sh)"
+    runs-on: ubuntu-latest
+    # Corre siempre, a diferencia de import-boundaries de abajo: demuestra
+    # que la lógica de detección funciona (Doc. 4 §7, historia 4: "caso de
+    # prueba incluido") sin depender de que exista código real en
+    # packages/*/src. Ref.: Hallazgo B1, auditoría independiente 2026-08-03.
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/test-check-import-boundaries.sh
+
   placeholder-fails-until-real-code-exists:
     name: "Bloqueo intencional: aún no hay código real en packages/*/src"
     runs-on: ubuntu-latest
@@ -47,28 +58,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Verificar fronteras de importación por paquete
-        run: |
-          set -e
-          # Tabla de Doc. 5 §2.1 — un bloque por paquete origen.
-          # cre: solo puede importar cks/validate.
-          if grep -rlE "from ['\"](\.\./)*(ate|lsm|api|policylab-client)" packages/cre/src 2>/dev/null; then
-            echo "::error::packages/cre importa de un paquete no permitido (Doc. 0 §4.1, §4.5)"; exit 1
-          fi
-          # ate: no puede importar policylab-client ni ekg-macro como contenido crudo.
-          if grep -rlE "from ['\"](\.\./)*(policylab-client)" packages/ate/src 2>/dev/null; then
-            echo "::error::packages/ate importa policylab-client (Doc. 0 §3.4)"; exit 1
-          fi
-          # lsm: no puede importar cre, ate ni policylab-client.
-          if grep -rlE "from ['\"](\.\./)*(cre|ate|policylab-client)" packages/lsm/src 2>/dev/null; then
-            echo "::error::packages/lsm importa un paquete no permitido (Doc. 0 §3.5)"; exit 1
-          fi
-          # api: no puede importar policylab-client.
-          if grep -rlE "from ['\"](\.\./)*(policylab-client)" packages/api/src 2>/dev/null; then
-            echo "::error::packages/api importa policylab-client (Doc. 0 §4.4)"; exit 1
-          fi
-          # policylab-client: no puede importar cre, ate ni lsm como código
-          # (solo el contrato HTTP publicado de api).
-          if grep -rlE "from ['\"](\.\./)*(cre|ate|lsm)['\"/]" packages/policylab-client/src 2>/dev/null; then
-            echo "::error::policylab-client importa un motor directamente (Doc. 0 §4.4)"; exit 1
-          fi
-          echo "Fronteras verificadas sin violaciones."
+        run: ./scripts/check-import-boundaries.sh .
