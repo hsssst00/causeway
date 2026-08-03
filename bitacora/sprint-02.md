@@ -64,6 +64,8 @@ _(Esta sección se completa a medida que avanza el sprint — Claude Code y Clau
 
 **Verificación de cierre:** `cd packages/cks/validate && npm test` → 18/18 en verde; `./scripts/test-check-import-boundaries.sh` → ambos casos pasan; `./scripts/check-import-boundaries.sh .` → sin violaciones contra el repo real.
 
+**Fuente del brief de corrección:** el informe completo de la auditoría independiente se agregó al repo en [`auditorias/auditoria-independiente-causeway-2026-08-03.md`](../auditorias/auditoria-independiente-causeway-2026-08-03.md) — es un documento histórico (fotografía del repo en el commit `a8bfd29`); no se reescribe con los cambios posteriores, aunque varios de sus hallazgos (A1, A3, A4, A5, B1, B2) ya quedaron corregidos por las tareas de esta misma entrada.
+
 ## 5. Riesgos y bloqueos observados durante el sprint
 
 - Migración pendiente acumulada: `validate-bundle-fixture` (desde S1) + el catálogo puente de agentes/variables (desde S2) ambos deben trasladarse a `ekg-macro` cuando ese repositorio se cree. Riesgo de que la creación de `ekg-macro` siga postergándose sprint tras sprint si no se prioriza explícitamente — a vigilar en Sprint Planning de S3.
