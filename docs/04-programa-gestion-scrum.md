@@ -122,7 +122,7 @@ Cada épica corresponde a un entregable de Doc. 3, §8.1—§8.2. Las historias 
 |---|---|---|
 | Catálogo completo de los seis agentes y sus variables típicas (Doc. 2, §3). | Cada variable declara agente(s), tipo y naturaleza (Doc. 2, §4.3); sin duplicados detectados por CI. | F0 |
 | Mecanismo completo de política monetaria expansiva (Doc. 2, §5.2) como aristas independientes con metadato completo. | Las 6 aristas del ejemplo de Doc. 2, §5.2 existen en el grafo, cada una con `explicacion_si_error` validada por el PO. | F0 |
-| Mecanismo completo de política fiscal expansiva — **contenido nuevo, no desarrollado en Doc. 2**; se autora siguiendo la estructura del ejemplo monetario de Doc. 2, §5.2. | Camino consistente de 5+ eslabones, con la misma forma que el ejemplo de Doc. 2, §5.2 (agente, variable, relación, `explicacion_si_error` por arista), validado por el PO como económicamente correcto. | F1 |
+| Mecanismo completo de política fiscal expansiva — **contenido nuevo, no desarrollado en Doc. 2**; se autora siguiendo la estructura del ejemplo monetario de Doc. 2, §5.2. | Camino consistente de 5+ eslabones, con la misma forma que el ejemplo de Doc. 2, §5.2 (agente, variable, relación, `explicacion_si_error` por arista), validado por el PO como económicamente correcto. | F0 |
 | Set de 12–16 escenarios curados para Niveles 0–II. | Cada escenario pasa el proceso de curación completo de Doc. 2, §11.3 (validación de esquema — revisión económica — revisión pedagógica) — nota: la etapa de "revisión económica" la ejecuta el PO conforme al riesgo R1 de §9. | F2 |
 
 **E3 — Diseño de alta fidelidad (W1–W3)** · Doc. 3, §4.3 · Responsable primario: Claude (diseño) con validación del PO
@@ -284,3 +284,4 @@ Este documento consume el roadmap de Doc. 3, §8.2 y lo convierte en programa ej
 |---|---|---|
 | 1.0 | 2026-08-01 | Publicación inicial |
 | 1.0.1 | 2026-08-01 | Normalización del estilo de citas cruzadas al formato del corpus ("Doc. N, §X"). |
+| 1.0.2 | 2026-08-04 | §7: corrige la Fase de la historia "Mecanismo completo de política fiscal expansiva" (E2) de F1 a F0. Inconsistencia detectada en Sprint Planning de S3: el texto del objetivo de S3 en §8 (fila de fase F0) ya incluía explícitamente "mecanismos de política monetaria y fiscal completos", contradiciendo la Fase F1 declarada en esta tabla para la historia correspondiente. El PO decidió, en la sesión de Sprint Planning, incluir el mecanismo fiscal en S3 y corregir la Fase aquí en vez de recortar el texto de §8. Ver `bitacora/sprint-03.md` §1–§2. |
