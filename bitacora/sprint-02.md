@@ -117,6 +117,69 @@ Se detectó, durante esta revisión, una inconsistencia en Doc. 2 §3 sobre `tas
 
 **Verificación de cierre:** `cd packages/cks/validate && npm test` → 32/32 en verde (verificado antes y después de eliminar `content-puente/`, confirmando que la nueva fixture es independiente de esa carpeta); `node scripts/validar-y-publicar-bundle.js` corrido localmente dentro de `ekg-macro` (con `causeway` como checkout hermano) → agentes y variables válidos, sin duplicados, sin inconsistencias agente↔variable, bundle `is-lm-v0.1.0.json` generado.
 
+### 2026-08-03 — Claude Code — conversión JSON → YAML en `ekg-macro` (cierre de excepción)
+
+**Qué se hizo:** el PO decidió resolver la excepción documentada en
+`ekg-macro/README.md` ("Nota de formato: JSON, no YAML") desde la
+migración registrada más arriba en esta misma entrada §4. Se convirtieron
+`ekg-macro/agentes/*.json` (6 archivos) y `ekg-macro/variables/*.json` (25
+archivos) a `*.yaml`, transcripción 1:1 (mismo orden de campos, 2 espacios
+de indentación, sin flow style) — **es una conversión de serialización,
+no una edición de contenido.** Verificación de round-trip realizada antes
+de borrar cada `.json`: se cargó el YAML recién escrito y se comparó como
+objeto (`assert.deepStrictEqual`) contra el JSON original — los 31
+archivos coinciden exactamente. Los `.json` originales se borraron tras
+la verificación; `agentes/` y `variables/` de `ekg-macro` contienen ahora
+solo `.yaml`.
+
+`ekg-macro/scripts/validar-y-publicar-bundle.js` actualizado:
+`leerCatalogo()` filtra `.yaml` y parsea con `js-yaml.load()` en vez de
+`.json`/`JSON.parse()`; `VERSION` pasa de `'0.1.0'` a `'0.1.1'`. Se agregó
+`ekg-macro/package.json` (nuevo en ese repositorio) con `js-yaml` como
+dependencia, y `ekg-macro/.ci/validar-cks.yml` gana un paso `npm install`
+en `ekg-macro` (antes de correr el script) en ambos jobs
+(`validar-catalogo` y `publicar-bundle`). La lógica de inmutabilidad del
+bundle (`if (fs.existsSync(destino))`) no se tocó — sigue protegiendo
+`is-lm-v0.1.0.json` y ahora también `is-lm-v0.1.1.json`.
+
+Se corrió `node scripts/validar-y-publicar-bundle.js` dentro de
+`ekg-macro` (con `causeway` como checkout hermano): validó los 6 agentes
+y 25 variables contra sus esquemas leyendo desde YAML, sin duplicados, sin
+inconsistencias agente↔variable, y publicó `bundles/is-lm-v0.1.1.json`.
+Diff estructural contra `is-lm-v0.1.0.json` (comparación campo por campo)
+confirma que `agentes`, `variables`, `relaciones`, `eventos` y
+`escenarios` son idénticos entre ambos bundles — solo difieren `version`
+(`0.1.0` → `0.1.1`) y `generado` (timestamp). `is-lm-v0.1.0.json` no se
+editó ni se borró.
+
+`ekg-macro/README.md` (sección "Nota de formato") y `CHANGELOG.md`
+(`[0.1.1]`, sección "Cambiado" — no hay contenido nuevo) actualizados
+para registrar el cierre. **Doc. 5 §3 no se editó**: ya especificaba
+`agentes/*.yaml` y `variables/*.yaml` correctamente; era la
+implementación de `ekg-macro` la que estaba en excepción respecto al
+documento, no al revés — cerrar la excepción significó ajustar el
+repositorio, no el documento.
+
+`packages/cks/validate` en `causeway` no se tocó — sigue en
+**32/32 tests en verde** (`npm test`, verificado tras la conversión); los
+esquemas de `packages/cks/schema/` no cambiaron, validan objetos ya
+parseados sin importar si el origen fue JSON o YAML.
+
+**Qué explícitamente NO se decidió ni se cambió:**
+- El punto 4 heredado ("Expectativas" excluida del catálogo de variables,
+  `ekg-macro/README.md`, "Historial de curación heredado") sigue
+  **abierto** — sin relación con esta tarea, que es puramente de formato.
+- La historia 2 de §2 de esta bitácora permanece **"En revisión"**, no
+  pasa a "Hecho" — este cambio no aporta la firma económica pendiente.
+
+**Verificación de cierre:** round-trip de los 31 archivos (script ad hoc,
+`assert.deepStrictEqual` contra cada JSON original antes de borrarlo);
+`node scripts/validar-y-publicar-bundle.js --solo-validar` y luego sin la
+bandera → agentes y variables válidos, `bundles/is-lm-v0.1.1.json`
+publicado; diff estructural `0.1.0` vs `0.1.1` → solo `version` y
+`generado` distintos; `cd packages/cks/validate && npm test` → 32/32 en
+verde, sin cambios respecto al conteo anterior.
+
 ## 5. Riesgos y bloqueos observados durante el sprint
 
 - Migración pendiente acumulada: `validate-bundle-fixture` (desde S1) + el catálogo puente de agentes/variables (desde S2) ambos deben trasladarse a `ekg-macro` cuando ese repositorio se cree. Riesgo de que la creación de `ekg-macro` siga postergándose sprint tras sprint si no se prioriza explícitamente — a vigilar en Sprint Planning de S3. **[Resuelto 2026-08-03: `ekg-macro` (`hsssst00/ekg-macro`) creado; ambas migraciones completadas — ver entrada "2026-08-03 — Claude Code — migración a ekg-macro" en §4.]**
@@ -131,3 +194,4 @@ Se detectó, durante esta revisión, una inconsistencia en Doc. 2 §3 sobre `tas
 | 1.2 | 2026-08-03 | Tareas 1.3 (PO proporcionó `decisiones-arranque-scrum.md`) y 2.1 (PO eligió opción b) cerradas. Del brief de corrección solo queda 2.3, correctamente diferida a Sprint Planning de S3, y la retro de S1 en borrador a la espera del PO. |
 | 1.3 | 2026-08-03 | Historias 1 y 2 de S2 pasan a "En revisión": `variable.schema.json`, `reglas-integridad.js` (regla de duplicados) y el catálogo puente de agentes/variables quedan implementados y en verde en CI. Historia 2 queda explícitamente bloqueada para Hecho hasta firma económica del PO (cuatro puntos de clasificación documentados en `content-puente/README.md`). |
 | 1.4 | 2026-08-03 | Se crea `ekg-macro` (Doc. 5 §3) y se completan ambas migraciones pendientes de §5: `validate-bundle-fixture` → `ekg-macro/.ci/validar-cks.yml`; catálogo puente de agentes/variables → `ekg-macro/agentes/` y `ekg-macro/variables/`. `packages/cks/content-puente/` eliminado de `causeway`. Se formaliza `variablesFantasmaOHuerfanas()` en `reglas-integridad.js` (29 → 32 tests). Historia 2 de §2 permanece "En revisión" — la migración es estructural, no resuelve el punto 4 (Expectativas) pendiente de firma del PO. |
+| 1.5 | 2026-08-03 | `ekg-macro/agentes/*.json` y `variables/*.json` convertidos a `*.yaml` (31 archivos, round-trip verificado), cerrando la excepción documentada en `ekg-macro/README.md`. `validar-y-publicar-bundle.js` lee YAML vía `js-yaml` (dependencia nueva en `ekg-macro/package.json`, también nuevo); `VERSION` → `0.1.1`; `.ci/validar-cks.yml` gana paso `npm install` en `ekg-macro`. Bundle `is-lm-v0.1.1.json` publicado, idéntico a `0.1.0` salvo `version`/`generado` (diff estructural verificado); `is-lm-v0.1.0.json` intacto. Doc. 5 sin cambios — ya especificaba YAML correctamente. Historia 2 de §2 permanece "En revisión", sin relación con este cambio. |
