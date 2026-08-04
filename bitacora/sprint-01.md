@@ -21,7 +21,7 @@ Ver [`bitacora/decisiones-arranque-scrum.md`](decisiones-arranque-scrum.md) (cop
 | 2 | Esquemas de `evento`, `agente`, `supuesto`, `escenario` | E0 | Doc. 3 §7.3 | F0 | **Hecho** |
 | 3 | Reglas de integridad automatizadas, validadas contra los fragmentos ilustrativos de Doc. 3 §7.3 (no contra el catálogo real del EKG, que corresponde a S2) | E0 | Doc. 2 §8.2, Doc. 3 §7.3 | F0 | **Hecho** |
 | 4 | Monolito modular con fronteras de importación verificables en CI | E1 | Doc. 0 §4, Doc. 5 §2.1 | F0 | **Hecho** (job placeholder activo; `import-boundaries` queda listo pero inactivo hasta S2) |
-| 5 | Pipeline que valida un bundle EKG contra CKS y lo publica versionado | E1 | Doc. 5 §3.2 | F0 | **Hecho** (solución puente en `causeway`; se traslada a `ekg-macro` cuando ese repo exista) |
+| 5 | Pipeline que valida un bundle EKG contra CKS y lo publica versionado | E1 | Doc. 5 §3.2 | F0 | **Hecho** (solución puente en `causeway`; trasladado a `ekg-macro/.ci/validar-cks.yml` el 2026-08-03 — ver `bitacora/sprint-02.md` §4) |
 
 **Decisión de scope tomada en planning:** la historia 3 del backlog original (Doc. 4 §7) dependía del catálogo de variables del EKG (Doc. 2 §4.3), que no existe hasta S2 — violaría DoR (§6.1: dependencias de datos deben existir). Se redefinió su criterio de aceptación para validar contra los fragmentos ilustrativos de Doc. 3 §7.3, preservando el resto del alcance de S1 sin bloqueo.
 
@@ -84,3 +84,4 @@ _(Vacío al inicio del sprint.)_
 | 1.1 | 2026-08-03 | Se agrega entrada de trabajo: primer borrador de los 5 esquemas CKS y de `.ci/fronteras.yml` (historias 1, 2 y 4). |
 | 1.2 | 2026-08-03 | **S1 cerrado.** Se agregan `docs/adr/0001`, `.ci/tests.yml`, `.ci/cks-lib.yml` (historia 5), `packages/cks/validate` (librería + 13 tests en verde), `reglas-integridad.js` (historia 3) y `packages/cks/schema/refs.schema.json` (corrección de un bug de referencias cruzadas detectado al implementar los tests). |
 | 1.3 | 2026-08-03 | §1: referencia a `decisiones-arranque-scrum.md` actualizada a su ruta dentro del repo (`bitacora/decisiones-arranque-scrum.md`), copiada verbatim en S2 (Tarea 1.3 del brief de corrección de la auditoría independiente, Hallazgo A3). |
+| 1.4 | 2026-08-03 | §2, historia 5: nota actualizada — la migración a `ekg-macro/.ci/validar-cks.yml` ya ocurrió (ver `bitacora/sprint-02.md` §4, entrada "migración a ekg-macro"). No se reabre la historia; sigue Hecha. |

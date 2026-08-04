@@ -48,9 +48,10 @@ Los nombres de componentes se mantienen en inglés (siglas citables y versionabl
 El programa se gestiona en sprints de dos semanas (Documento 4). Estado actual:
  
 - **Fase F0**, Sprint 1 cerrado (épicas E0 — CKS v1 — y E1 — arquitectura Causeway y CI de contenido); Sprint 2 en curso (arranque de E2 — EKG IS-LM v0). Detalle sprint a sprint en [`bitacora/`](bitacora/).
-- **`packages/cks/schema/`** — los cinco esquemas JSON del Causal Knowledge Schema: `relacion`, `evento`, `agente`, `supuesto`, `escenario` (más `refs.schema.json`, que centraliza las referencias compartidas entre ellos).
-- **`packages/cks/validate/`** — librería de validación (Ajv) que consume esos esquemas, con cobertura de test (positiva y negativa) para los cinco tipos y para las reglas de integridad de Doc. 2 §8.2.
-- **`.ci/`** — tres workflows: `fronteras.yml` (reglas de dependencia entre paquetes, Doc. 5 §2.1), `tests.yml` (corre la suite de cada paquete con `package.json`), `cks-lib.yml` (valida y empaqueta `packages/cks` como artefacto versionado).
+- **`packages/cks/schema/`** — los seis esquemas JSON del Causal Knowledge Schema: `relacion`, `evento`, `agente`, `supuesto`, `escenario`, `variable` (más `refs.schema.json`, que centraliza las referencias compartidas entre ellos).
+- **`packages/cks/validate/`** — librería de validación (Ajv) que consume esos esquemas, con cobertura de test (positiva y negativa) para los seis tipos y para las reglas de integridad de Doc. 2 §8.2 y §4.3 (variables sin agente, aristas fuera del grafo del modelo, variables duplicadas, consistencia agente↔variable).
+- **`.ci/`** — tres workflows: `fronteras.yml` (reglas de dependencia entre paquetes, Doc. 5 §2.1), `tests.yml` (corre la suite de cada paquete con `package.json`), `cks-lib.yml` (corre los tests de `packages/cks` y lo empaqueta como artefacto versionado que consume `ekg-macro`).
+- **[`ekg-macro`](https://github.com/hsssst00/ekg-macro)** — repositorio hermano (Doc. 5 §1, §3) con el catálogo curado del EKG (agentes, variables; relaciones/eventos/escenarios a partir de S3). El catálogo puente que vivió temporalmente en `packages/cks/content-puente/` (S2) se trasladó allí — ver `ekg-macro/README.md` para el historial de curación heredado y `bitacora/sprint-02.md` §4 para el registro de la migración.
  
 ## Estado del corpus
  

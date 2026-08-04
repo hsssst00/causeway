@@ -5,18 +5,17 @@ name: cks-lib
 # librería que "consume también la CI de ekg-macro"), Doc. 5 §3.2
 # (versionado semántico de bundles).
 #
-# NOTA DE ALCANCE (S1): el repositorio `ekg-macro` (Doc. 5 §1, §3) todavía
-# no existe — su CI real (ekg-macro/.ci/validar-cks.yml) es la que
-# eventualmente valida y publica bundles reales de contenido económico.
-# Mientras tanto, este workflow cumple el criterio de aceptación de la
-# historia 5 DENTRO de causeway, en dos partes:
-#   1) empaqueta packages/cks (schema + validate) como artefacto versionado
-#      — lo que ekg-macro consumirá cuando exista;
-#   2) demuestra el pipeline completo de validación de un bundle usando el
-#      fixture ilustrativo (Doc. 2 §5.2), como prueba de que "un bundle
-#      inválido no se publica; uno válido queda accesible por versión".
-# Cuando se cree `ekg-macro`, el job validate-bundle-fixture se traslada
-# allí y opera sobre bundles reales en vez del fixture.
+# NOTA DE ALCANCE (S1, resuelta 2026-08-03): este workflow tenía un tercer
+# job, `validate-bundle-fixture`, que demostraba el criterio de aceptación
+# de la historia 5 DENTRO de causeway (usando el fixture ilustrativo de
+# Doc. 2 §5.2) mientras `ekg-macro` no existía. Ese repositorio ya existe
+# — el job se trasladó a `ekg-macro/.ci/validar-cks.yml` (ver
+# `ekg-macro/README.md` y `causeway/bitacora/sprint-02.md`, entrada de
+# migración 2026-08-03) y ahora opera sobre el catálogo real de
+# agentes/variables, no sobre el fixture. Este archivo conserva únicamente
+# lo que sigue siendo responsabilidad de `causeway` (Doc. 5 §2): correr los
+# tests de la librería y empaquetarla como artefacto versionado que
+# `ekg-macro` consume.
 
 on:
   push:
@@ -43,35 +42,9 @@ jobs:
           npm install
           npm test
 
-  validate-bundle-fixture:
-    name: "Validar bundle de ejemplo contra CKS (demostración historia 5)"
-    needs: test-cks-lib
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      - working-directory: packages/cks/validate
-        run: npm install
-      - name: Validar el fixture ilustrativo como si fuera un bundle
-        working-directory: packages/cks/validate
-        run: |
-          node -e "
-            const { validarLote } = require('./index.js');
-            const fixture = require('./fixtures/mecanismo-monetario-ilustrativo.json');
-            const resultado = validarLote('relacion', fixture.relaciones);
-            const invalidas = resultado.filter(r => !r.valido);
-            if (invalidas.length > 0) {
-              console.error('Bundle inválido, no se publica:', JSON.stringify(invalidas, null, 2));
-              process.exit(1);
-            }
-            console.log('Bundle válido: ' + fixture.relaciones.length + ' relaciones OK.');
-          "
-
   package-cks-lib:
     name: "Empaquetar packages/cks como artefacto versionado"
-    needs: validate-bundle-fixture
+    needs: test-cks-lib
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:

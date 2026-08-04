@@ -99,9 +99,27 @@ Se detectó, durante esta revisión, una inconsistencia en Doc. 2 §3 sobre `tas
 
 **Verificación de cierre:** `cd packages/cks/validate && npm test` → **29/29 en verde** (cambio es solo de documentación, no toca `packages/cks/schema` ni `packages/cks/validate`).
 
+### 2026-08-03 — Claude Code — migración a ekg-macro
+
+**Qué se hizo:**
+- Creado el repositorio `ekg-macro` (`hsssst00/ekg-macro`, Doc. 5 §1/§3), resolviendo la deuda de migración registrada en §5 de esta bitácora y en el Hallazgo C3 de `auditorias/auditoria-independiente-causeway-2026-08-03.md`.
+- Migrado verbatim el catálogo puente de `packages/cks/content-puente/` (6 agentes, 25 variables, historia 2 de E2) a `ekg-macro/agentes/` y `ekg-macro/variables/`. Formato: se mantiene JSON, no se convierte a YAML pese a que Doc. 5 §3 muestra `*.yaml` y `content-puente/README.md` declaraba esa intención — decisión explícita, documentada en `ekg-macro/README.md` ("Nota de formato") como discrepancia pendiente de reconciliar con Doc. 5 en una sesión futura.
+- Migrado el job `validate-bundle-fixture` de `.ci/cks-lib.yml` a `ekg-macro/.ci/validar-cks.yml`, ahora validando el catálogo real en vez del fixture ilustrativo. `package-cks-lib.needs` actualizado de `validate-bundle-fixture` a `test-cks-lib`.
+- Formalizado el "script ad hoc" mencionado en la entrada "Claude" del 2026-08-03 de esta misma bitácora: `variablesFantasmaOHuerfanas(catalogoAgentes, catalogoVariables)`, nueva en `packages/cks/validate/reglas-integridad.js`, con fixture de regresión (`fixtures/agentes-y-variables-puente.json`, snapshot del catálogo real) y tres tests nuevos (positivo contra el catálogo completo, dos negativos sintéticos). `packages/cks/validate`: 29 → **32 tests**, todos en verde.
+- Generado el primer bundle de `ekg-macro`, `bundles/is-lm-v0.1.0.json` (`agentes` y `variables` poblados; `relaciones`/`eventos`/`escenarios` vacíos, fuera de alcance hasta S3, Doc. 4 §8).
+- Eliminado `packages/cks/content-puente/` de `causeway` (`git rm`), ya migrado.
+- Actualizados `README.md` (raíz, "Estado del repositorio") y `bitacora/sprint-01.md` (nota de resolución en la fila de historia 5, §2).
+
+**Qué explícitamente NO se decidió ni se cambió:**
+- El punto 4 de `content-puente/README.md` ("Expectativas" excluida del catálogo de variables, Doc. 3 §4.4) sigue **abierto** — se trasladó verbatim a `ekg-macro/README.md`, sin resolverlo. No era objeto de esta migración (que es estructural, Doc. 5 §3), y sigue requiriendo firma económica del PO.
+- La historia 2 de §2 de esta bitácora permanece **"En revisión"**, no pasa a "Hecho". Esta migración traslada dónde vive el contenido; no aporta la firma económica que exige la Definition of Done (Doc. 4 §6.2) sobre el punto 4 pendiente — el esquema valida forma, no verdad económica (Doc. 3 §7.3, nota a).
+- `ekg-macro` no recibe `bitacora/` ni `retro/` propios — decisión documentada con su razonamiento en `ekg-macro/README.md`, sección "Bitácora y tablero".
+
+**Verificación de cierre:** `cd packages/cks/validate && npm test` → 32/32 en verde (verificado antes y después de eliminar `content-puente/`, confirmando que la nueva fixture es independiente de esa carpeta); `node scripts/validar-y-publicar-bundle.js` corrido localmente dentro de `ekg-macro` (con `causeway` como checkout hermano) → agentes y variables válidos, sin duplicados, sin inconsistencias agente↔variable, bundle `is-lm-v0.1.0.json` generado.
+
 ## 5. Riesgos y bloqueos observados durante el sprint
 
-- Migración pendiente acumulada: `validate-bundle-fixture` (desde S1) + el catálogo puente de agentes/variables (desde S2) ambos deben trasladarse a `ekg-macro` cuando ese repositorio se cree. Riesgo de que la creación de `ekg-macro` siga postergándose sprint tras sprint si no se prioriza explícitamente — a vigilar en Sprint Planning de S3.
+- Migración pendiente acumulada: `validate-bundle-fixture` (desde S1) + el catálogo puente de agentes/variables (desde S2) ambos deben trasladarse a `ekg-macro` cuando ese repositorio se cree. Riesgo de que la creación de `ekg-macro` siga postergándose sprint tras sprint si no se prioriza explícitamente — a vigilar en Sprint Planning de S3. **[Resuelto 2026-08-03: `ekg-macro` (`hsssst00/ekg-macro`) creado; ambas migraciones completadas — ver entrada "2026-08-03 — Claude Code — migración a ekg-macro" en §4.]**
 - `import-boundaries` sigue sin poder activarse: ningún paquete de código (`cre`, `ate`, `lsm`, `api`, `policylab-client`) tiene implementación real todavía. No es un bloqueo de S2, pero convergerá con E4 (CRE) recién en S5.
 
 ## 6. Control de versiones
@@ -112,3 +130,4 @@ Se detectó, durante esta revisión, una inconsistencia en Doc. 2 §3 sobre `tas
 | 1.1 | 2026-08-03 | Entrada de trabajo: Bloque 1 del brief de corrección de la auditoría independiente (tareas 1.1, 1.2, 1.4, 1.5 cerradas; 2.2 en borrador). Tareas 1.3 y 2.1 bloqueadas pendientes de insumo/decisión del PO. |
 | 1.2 | 2026-08-03 | Tareas 1.3 (PO proporcionó `decisiones-arranque-scrum.md`) y 2.1 (PO eligió opción b) cerradas. Del brief de corrección solo queda 2.3, correctamente diferida a Sprint Planning de S3, y la retro de S1 en borrador a la espera del PO. |
 | 1.3 | 2026-08-03 | Historias 1 y 2 de S2 pasan a "En revisión": `variable.schema.json`, `reglas-integridad.js` (regla de duplicados) y el catálogo puente de agentes/variables quedan implementados y en verde en CI. Historia 2 queda explícitamente bloqueada para Hecho hasta firma económica del PO (cuatro puntos de clasificación documentados en `content-puente/README.md`). |
+| 1.4 | 2026-08-03 | Se crea `ekg-macro` (Doc. 5 §3) y se completan ambas migraciones pendientes de §5: `validate-bundle-fixture` → `ekg-macro/.ci/validar-cks.yml`; catálogo puente de agentes/variables → `ekg-macro/agentes/` y `ekg-macro/variables/`. `packages/cks/content-puente/` eliminado de `causeway`. Se formaliza `variablesFantasmaOHuerfanas()` en `reglas-integridad.js` (29 → 32 tests). Historia 2 de §2 permanece "En revisión" — la migración es estructural, no resuelve el punto 4 (Expectativas) pendiente de firma del PO. |
