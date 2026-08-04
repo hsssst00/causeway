@@ -21,7 +21,7 @@ Ver `sprint-01.md` para el cierre completo de S1. Resumen operativo verificado h
 | # | Historia | Épica | Ref. cruzada | Fase | Estado |
 |---|---|---|---|---|---|
 | 1 | Esquema JSON de `variable` (nombre, agente(s), tipo, naturaleza, modelos_validos) + extensión de `reglas-integridad.js` con detección de variables duplicadas | E0 | Doc. 2 §4.3, Doc. 4 §7 (criterio de aceptación de la historia de catálogo de E2) | F0 | En revisión — CI en verde, sin firma de contenido pendiente (es trabajo técnico, no económico) |
-| 2 | Catálogo completo de los seis agentes (Doc. 2 §3) y sus variables típicas (Doc. 2 §4.3), autorado como solución puente dentro de `causeway` | E2 | Doc. 2 §3, §4.3; Doc. 4 §7; Doc. 5 §3 | F0 | En revisión — borrador completo, CI en verde, **esperando firma económica del PO** (Doc. 4 §6.2) antes de poder marcarse Hecho |
+| 2 | Catálogo completo de los seis agentes (Doc. 2 §3) y sus variables típicas (Doc. 2 §4.3), autorado como solución puente dentro de `causeway` | E2 | Doc. 2 §3, §4.3; Doc. 4 §7; Doc. 5 §3 | F0 | En revisión — borrador completo, CI en verde, **firma económica completa** (los cuatro puntos de clasificación confirmados por el PO, punto 4 de forma provisional — ver §4) — pendiente solo de demostración en Sprint Review |
 
 **Decisiones de scope tomadas en planning (confirmadas por el PO, 2026-08-03):**
 
@@ -85,7 +85,7 @@ _(Esta sección se completa a medida que avanza el sprint — Claude Code y Clau
 
 ciclo-economico (y la ambigüedad de régimen de tasa-interes) quedan como candidatas a revisión de taxonomía de naturaleza si en el futuro aparecen más variables categóricas que no calcen en stock/flujo/precio_tasa — decisión tomada para no asumir el costo de tocar Doc. 2 §4.2 y Doc. 3 §5.3 en S2.
 
-Se detectó, durante esta revisión, una inconsistencia en Doc. 2 §3 sobre `tasa-interes` (listada como controlada por el Banco Central, lo cual solo es correcto bajo régimen de Taylor Rule — Doc. 2 §7.2 — no en el modelo IS-LM base): queda marcada explícitamente como pendiente de corrección, no corregida en esta sesión. El punto de "Expectativas" sigue abierto.
+Se detectó, durante esta revisión, una inconsistencia en Doc. 2 §3 sobre `tasa-interes` (listada como controlada por el Banco Central, lo cual solo es correcto bajo régimen de Taylor Rule — Doc. 2 §7.2 — no en el modelo IS-LM base): queda marcada explícitamente como pendiente de corrección, no corregida en esta sesión. El punto de "Expectativas" sigue abierto. **[Confirmado provisionalmente 2026-08-04 — ver entrada "PO + Claude Code — confirmación provisional del punto 4" en §4.]**
 
 **Verificación de cierre:** `cd packages/cks/validate && npm test` → **29/29 en verde**, sin cambios respecto al conteo tras aplicar el patch (los cambios de esta sesión fueron solo a `content-puente/README.md` y a esta bitácora, ninguno de los dos afecta la suite).
 
@@ -111,7 +111,7 @@ Se detectó, durante esta revisión, una inconsistencia en Doc. 2 §3 sobre `tas
 - Actualizados `README.md` (raíz, "Estado del repositorio") y `bitacora/sprint-01.md` (nota de resolución en la fila de historia 5, §2).
 
 **Qué explícitamente NO se decidió ni se cambió:**
-- El punto 4 de `content-puente/README.md` ("Expectativas" excluida del catálogo de variables, Doc. 3 §4.4) sigue **abierto** — se trasladó verbatim a `ekg-macro/README.md`, sin resolverlo. No era objeto de esta migración (que es estructural, Doc. 5 §3), y sigue requiriendo firma económica del PO.
+- El punto 4 de `content-puente/README.md` ("Expectativas" excluida del catálogo de variables, Doc. 3 §4.4) sigue **abierto** — se trasladó verbatim a `ekg-macro/README.md`, sin resolverlo. No era objeto de esta migración (que es estructural, Doc. 5 §3), y sigue requiriendo firma económica del PO. **[Confirmado provisionalmente 2026-08-04 — ver entrada "PO + Claude Code — confirmación provisional del punto 4" en §4.]**
 - La historia 2 de §2 de esta bitácora permanece **"En revisión"**, no pasa a "Hecho". Esta migración traslada dónde vive el contenido; no aporta la firma económica que exige la Definition of Done (Doc. 4 §6.2) sobre el punto 4 pendiente — el esquema valida forma, no verdad económica (Doc. 3 §7.3, nota a).
 - `ekg-macro` no recibe `bitacora/` ni `retro/` propios — decisión documentada con su razonamiento en `ekg-macro/README.md`, sección "Bitácora y tablero".
 
@@ -169,6 +169,8 @@ parseados sin importar si el origen fue JSON o YAML.
 - El punto 4 heredado ("Expectativas" excluida del catálogo de variables,
   `ekg-macro/README.md`, "Historial de curación heredado") sigue
   **abierto** — sin relación con esta tarea, que es puramente de formato.
+  **[Confirmado provisionalmente 2026-08-04 — ver entrada "PO + Claude
+  Code — confirmación provisional del punto 4" en §4.]**
 - La historia 2 de §2 de esta bitácora permanece **"En revisión"**, no
   pasa a "Hecho" — este cambio no aporta la firma económica pendiente.
 
@@ -179,6 +181,35 @@ bandera → agentes y variables válidos, `bundles/is-lm-v0.1.1.json`
 publicado; diff estructural `0.1.0` vs `0.1.1` → solo `version` y
 `generado` distintos; `cd packages/cks/validate && npm test` → 32/32 en
 verde, sin cambios respecto al conteo anterior.
+
+### 2026-08-04 — PO + Claude Code — confirmación provisional del punto 4
+
+**Qué se hizo:** el PO confirmó, de forma **provisional**, el punto 4
+pendiente del catálogo de agentes/variables (Doc. 2 §11.3, Doc. 4 §6.2):
+"Expectativas" se excluye del catálogo de variables y sigue modelada
+como *supuesto* (`expectativas_estaticas`, Doc. 3 §4.4), no como
+variable del grafo. La confirmación queda condicionada a una reserva
+explícita: el PO no tiene acceso a profesionales de macroeconomía para
+validar la decisión, así que va a consultar una instancia externa de
+Claude (modelo Fable 5) sobre este punto; si esa consulta contradice la
+confirmación provisional, la decisión se revisa.
+
+`ekg-macro/README.md` gana una sección nueva ("Actualización del punto 4
+(post-migración, 2026-08-04)") inmediatamente después del historial de
+curación heredado, sin editar el bloque verbatim — mismo patrón de
+anotación ya usado en esta bitácora para no reescribir el registro
+histórico.
+
+**Qué explícitamente NO cambia:**
+- La historia 2 de §2 de esta bitácora permanece **"En revisión"**, no
+  pasa a "Hecho" — la confirmación es provisional y está sujeta a la
+  reserva de consulta externa; una confirmación condicional no es la
+  firma económica firme que exige la Definition of Done (Doc. 4 §6.2).
+
+**Verificación de cierre:** cambio de documentación únicamente
+(`ekg-macro/README.md`); no toca `packages/cks/schema`,
+`packages/cks/validate` ni ningún archivo de `agentes/`/`variables/` —
+no se re-corrió la suite de tests por no haber cambios de código.
 
 ## 5. Riesgos y bloqueos observados durante el sprint
 
@@ -195,3 +226,4 @@ verde, sin cambios respecto al conteo anterior.
 | 1.3 | 2026-08-03 | Historias 1 y 2 de S2 pasan a "En revisión": `variable.schema.json`, `reglas-integridad.js` (regla de duplicados) y el catálogo puente de agentes/variables quedan implementados y en verde en CI. Historia 2 queda explícitamente bloqueada para Hecho hasta firma económica del PO (cuatro puntos de clasificación documentados en `content-puente/README.md`). |
 | 1.4 | 2026-08-03 | Se crea `ekg-macro` (Doc. 5 §3) y se completan ambas migraciones pendientes de §5: `validate-bundle-fixture` → `ekg-macro/.ci/validar-cks.yml`; catálogo puente de agentes/variables → `ekg-macro/agentes/` y `ekg-macro/variables/`. `packages/cks/content-puente/` eliminado de `causeway`. Se formaliza `variablesFantasmaOHuerfanas()` en `reglas-integridad.js` (29 → 32 tests). Historia 2 de §2 permanece "En revisión" — la migración es estructural, no resuelve el punto 4 (Expectativas) pendiente de firma del PO. |
 | 1.5 | 2026-08-03 | `ekg-macro/agentes/*.json` y `variables/*.json` convertidos a `*.yaml` (31 archivos, round-trip verificado), cerrando la excepción documentada en `ekg-macro/README.md`. `validar-y-publicar-bundle.js` lee YAML vía `js-yaml` (dependencia nueva en `ekg-macro/package.json`, también nuevo); `VERSION` → `0.1.1`; `.ci/validar-cks.yml` gana paso `npm install` en `ekg-macro`. Bundle `is-lm-v0.1.1.json` publicado, idéntico a `0.1.0` salvo `version`/`generado` (diff estructural verificado); `is-lm-v0.1.0.json` intacto. Doc. 5 sin cambios — ya especificaba YAML correctamente. Historia 2 de §2 permanece "En revisión", sin relación con este cambio. |
+| 1.6 | 2026-08-04 | El PO confirma provisionalmente el punto 4 (Expectativas excluida del catálogo de variables), con reserva de consulta a una instancia externa de Claude (Fable 5). `ekg-macro/README.md` anota la actualización sin reescribir el historial verbatim. Historia 2 de §2 permanece "En revisión", pero su columna Estado pasa de "esperando firma económica" a "firma económica completa — pendiente solo de demostración en Sprint Review" (los cuatro puntos de clasificación ya tienen confirmación del PO, el punto 4 de forma provisional). No pasa a "Hecho" — confirmación condicional, no firma económica firme. |
