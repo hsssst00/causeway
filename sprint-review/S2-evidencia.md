@@ -219,3 +219,28 @@ agente↔variable — coincide exactamente con lo que muestra el bundle.
 - Este documento no ejecutó ni regeneró el bundle de `ekg-macro` — usó
   `--solo-validar` y leyó el bundle `0.1.1` ya publicado, sin crear
   `0.1.2` ni tocar ningún archivo de `agentes/` o `variables/`.
+
+---
+
+## Actualización posterior (2026-08-04)
+
+Este documento es un registro histórico: fotografía de la evidencia tal
+como se generó el 2026-08-04, antes de que se cerrara la reserva del
+punto 4. No se reescribe la prosa original de arriba — mismo criterio ya
+usado en [`auditorias/auditoria-independiente-causeway-2026-08-03.md`](../auditorias/auditoria-independiente-causeway-2026-08-03.md)
+y en [`consultas/consulta-externa-expectativas-2026-08-04.md`](../consultas/consulta-externa-expectativas-2026-08-04.md).
+
+Horas después de generado este documento, la reserva del punto 4
+("Expectativas") pasó de **provisional** a **firme**: la consulta externa
+mencionada arriba (sección "Qué NO declara este documento") se realizó, y
+respaldó la decisión — ver
+[`bitacora/sprint-02.md`](../bitacora/sprint-02.md) §4, entrada "cierre de
+la reserva del punto 4", y
+[`consultas/consulta-externa-expectativas-2026-08-04.md`](../consultas/consulta-externa-expectativas-2026-08-04.md).
+
+Con la reserva cerrada y esta evidencia como insumo, el PO aceptó ambas
+historias de S2 como **"Hecho"** en la Sprint Review del mismo día — ver
+`bitacora/sprint-02.md` §6 ("Cierre del sprint — Sprint Review"). La frase
+"confirmación provisional" en la sección "Qué NO declara este documento"
+(arriba) refleja el estado vigente en el momento en que este documento se
+redactó, no el estado final del sprint.
