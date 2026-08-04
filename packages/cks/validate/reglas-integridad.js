@@ -115,4 +115,50 @@ function variablesDuplicadas(catalogoVariables) {
   return violaciones;
 }
 
-module.exports = { variablesSinAgente, aristasFueraDelGrafoDelModelo, variablesDuplicadas };
+/**
+ * Regla 4 (formalización del script ad hoc registrado en
+ * bitacora/sprint-02.md §4, 2026-08-03 — "Claude": "consistencia cruzada
+ * agente↔variable verificada con un script ad hoc [...] sin fallas").
+ * Detecta dos tipos de inconsistencia entre el catálogo de agentes y el
+ * catálogo de variables:
+ *   (a) 'fantasma': una variable listada en variables_controladas o
+ *       variables_recibidas de un agente que NO existe en el catálogo de
+ *       variables (mismo concepto que el caso de prueba 'variable-fantasma'
+ *       de variable.schema.json, pero verificado aquí contra el catálogo
+ *       real, no contra el enum estático de agente-ref);
+ *   (b) 'huerfana': una variable del catálogo que ningún agente controla
+ *       ni recibe — no tiene punto de entrada/salida en el grafo de
+ *       agentes, por lo que no puede aparecer en ninguna relación causal
+ *       jugable.
+ *
+ * @param {Array<{id:string, variables_controladas:string[], variables_recibidas?:string[]}>} catalogoAgentes
+ * @param {Array<{id:string}>} catalogoVariables
+ * @returns {Array<{tipo:'fantasma'|'huerfana', variable:string, agente?:string, campo?:string}>}
+ *          violaciones encontradas (vacío si no hay)
+ */
+function variablesFantasmaOHuerfanas(catalogoAgentes, catalogoVariables) {
+  const idsVariables = new Set(catalogoVariables.map((v) => v.id));
+  const referenciadas = new Set();
+  const violaciones = [];
+
+  for (const agente of catalogoAgentes) {
+    for (const campo of ['variables_controladas', 'variables_recibidas']) {
+      for (const variable of agente[campo] || []) {
+        referenciadas.add(variable);
+        if (!idsVariables.has(variable)) {
+          violaciones.push({ tipo: 'fantasma', variable, agente: agente.id, campo });
+        }
+      }
+    }
+  }
+
+  for (const variable of catalogoVariables) {
+    if (!referenciadas.has(variable.id)) {
+      violaciones.push({ tipo: 'huerfana', variable: variable.id });
+    }
+  }
+
+  return violaciones;
+}
+
+module.exports = { variablesSinAgente, aristasFueraDelGrafoDelModelo, variablesDuplicadas, variablesFantasmaOHuerfanas };

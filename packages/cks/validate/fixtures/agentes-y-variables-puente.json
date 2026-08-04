@@ -1,0 +1,395 @@
+{
+  "_nota": "Snapshot de los 6 agentes y 25 variables autorados como catálogo puente en S2 (packages/cks/content-puente/, historia 2 de E2, Doc. 2 §3/§4.3), copiado aquí como fixture de regresión para la Regla 4 de reglas-integridad.js. El catálogo real y vivo se traslada a ekg-macro/agentes/ y ekg-macro/variables/ en la misma migración (Doc. 5 §3); este fixture queda congelado en el estado verificado el 2026-08-03 y no se actualiza si ekg-macro cambia después.",
+  "agentes": [
+    {
+      "id": "banco-central",
+      "nombre": "Banco Central",
+      "voz_institucional": "Banco Central de Cordavia",
+      "variables_controladas": [
+        "oferta-monetaria",
+        "tasa-interes"
+      ],
+      "variables_recibidas": [
+        "inflacion",
+        "produccion"
+      ]
+    },
+    {
+      "id": "empresas",
+      "nombre": "Empresas",
+      "voz_institucional": "Cámara de Industria y Comercio",
+      "variables_controladas": [
+        "inversion",
+        "produccion",
+        "empleo"
+      ],
+      "variables_recibidas": [
+        "tasa-interes",
+        "demanda-esperada",
+        "costos"
+      ]
+    },
+    {
+      "id": "gobierno",
+      "nombre": "Gobierno",
+      "voz_institucional": "Ministerio de Hacienda",
+      "variables_controladas": [
+        "gasto-publico",
+        "impuestos"
+      ],
+      "variables_recibidas": [
+        "deficit",
+        "deuda",
+        "ciclo-economico"
+      ]
+    },
+    {
+      "id": "hogares",
+      "nombre": "Hogares",
+      "voz_institucional": "Observatorio de Consumo de los Hogares",
+      "variables_controladas": [
+        "consumo",
+        "ahorro",
+        "oferta-trabajo"
+      ],
+      "variables_recibidas": [
+        "ingreso",
+        "tasa-interes"
+      ]
+    },
+    {
+      "id": "sector-externo",
+      "nombre": "Sector externo",
+      "voz_institucional": "Boletín de Comercio Exterior",
+      "variables_controladas": [
+        "tipo-cambio",
+        "flujos-capital",
+        "exportaciones-netas"
+      ],
+      "variables_recibidas": [
+        "tasa-interes-dom-vs-externa",
+        "terminos-intercambio"
+      ],
+      "activo": false
+    },
+    {
+      "id": "sistema-financiero",
+      "nombre": "Sistema financiero",
+      "voz_institucional": "Asociación de Banca de Cordavia",
+      "variables_controladas": [
+        "credito",
+        "tasas-mercado"
+      ],
+      "variables_recibidas": [
+        "tasa-interes",
+        "riesgo"
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "id": "ahorro",
+      "nombre": "Ahorro",
+      "agentes": [
+        "hogares"
+      ],
+      "tipo": "endogena",
+      "naturaleza": "flujo",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "ciclo-economico",
+      "nombre": "Ciclo económico",
+      "agentes": [
+        "gobierno"
+      ],
+      "tipo": "resultado",
+      "naturaleza": "stock",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "consumo",
+      "nombre": "Consumo",
+      "agentes": [
+        "hogares"
+      ],
+      "tipo": "endogena",
+      "naturaleza": "flujo",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "costos",
+      "nombre": "Costos",
+      "agentes": [
+        "empresas"
+      ],
+      "tipo": "endogena",
+      "naturaleza": "flujo",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "credito",
+      "nombre": "Crédito",
+      "agentes": [
+        "sistema-financiero"
+      ],
+      "tipo": "endogena",
+      "naturaleza": "stock",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "deficit",
+      "nombre": "Déficit",
+      "agentes": [
+        "gobierno"
+      ],
+      "tipo": "resultado",
+      "naturaleza": "flujo",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "demanda-esperada",
+      "nombre": "Demanda esperada",
+      "agentes": [
+        "empresas"
+      ],
+      "tipo": "endogena",
+      "naturaleza": "flujo",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "deuda",
+      "nombre": "Deuda",
+      "agentes": [
+        "gobierno"
+      ],
+      "tipo": "resultado",
+      "naturaleza": "stock",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "empleo",
+      "nombre": "Empleo",
+      "agentes": [
+        "empresas"
+      ],
+      "tipo": "resultado",
+      "naturaleza": "stock",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "exportaciones-netas",
+      "nombre": "Exportaciones netas",
+      "agentes": [
+        "sector-externo"
+      ],
+      "tipo": "resultado",
+      "naturaleza": "flujo",
+      "modelos": [
+        "Mundell-Fleming"
+      ]
+    },
+    {
+      "id": "flujos-capital",
+      "nombre": "Flujos de capital",
+      "agentes": [
+        "sector-externo"
+      ],
+      "tipo": "politica",
+      "naturaleza": "flujo",
+      "modelos": [
+        "Mundell-Fleming"
+      ]
+    },
+    {
+      "id": "gasto-publico",
+      "nombre": "Gasto público",
+      "agentes": [
+        "gobierno"
+      ],
+      "tipo": "politica",
+      "naturaleza": "flujo",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "impuestos",
+      "nombre": "Impuestos",
+      "agentes": [
+        "gobierno"
+      ],
+      "tipo": "politica",
+      "naturaleza": "flujo",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "inflacion",
+      "nombre": "Inflación",
+      "agentes": [
+        "banco-central"
+      ],
+      "tipo": "resultado",
+      "naturaleza": "precio_tasa",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "ingreso",
+      "nombre": "Ingreso",
+      "agentes": [
+        "hogares"
+      ],
+      "tipo": "resultado",
+      "naturaleza": "flujo",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "inversion",
+      "nombre": "Inversión",
+      "agentes": [
+        "empresas"
+      ],
+      "tipo": "endogena",
+      "naturaleza": "flujo",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "oferta-monetaria",
+      "nombre": "Oferta monetaria",
+      "agentes": [
+        "banco-central"
+      ],
+      "tipo": "politica",
+      "naturaleza": "stock",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "oferta-trabajo",
+      "nombre": "Oferta de trabajo",
+      "agentes": [
+        "hogares"
+      ],
+      "tipo": "endogena",
+      "naturaleza": "stock",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "produccion",
+      "nombre": "Producción",
+      "agentes": [
+        "empresas",
+        "banco-central"
+      ],
+      "tipo": "resultado",
+      "naturaleza": "flujo",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "riesgo",
+      "nombre": "Riesgo",
+      "agentes": [
+        "sistema-financiero"
+      ],
+      "tipo": "endogena",
+      "naturaleza": "precio_tasa",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "tasa-interes-dom-vs-externa",
+      "nombre": "Tasa de interés doméstica vs. externa",
+      "agentes": [
+        "sector-externo"
+      ],
+      "tipo": "endogena",
+      "naturaleza": "precio_tasa",
+      "modelos": [
+        "Mundell-Fleming"
+      ]
+    },
+    {
+      "id": "tasa-interes",
+      "nombre": "Tasa de interés",
+      "agentes": [
+        "banco-central",
+        "empresas",
+        "hogares",
+        "sistema-financiero"
+      ],
+      "tipo": "endogena",
+      "naturaleza": "precio_tasa",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "tasas-mercado",
+      "nombre": "Tasas de mercado",
+      "agentes": [
+        "sistema-financiero"
+      ],
+      "tipo": "endogena",
+      "naturaleza": "precio_tasa",
+      "modelos": [
+        "IS-LM"
+      ]
+    },
+    {
+      "id": "terminos-intercambio",
+      "nombre": "Términos de intercambio",
+      "agentes": [
+        "sector-externo"
+      ],
+      "tipo": "endogena",
+      "naturaleza": "precio_tasa",
+      "modelos": [
+        "Mundell-Fleming"
+      ]
+    },
+    {
+      "id": "tipo-cambio",
+      "nombre": "Tipo de cambio",
+      "agentes": [
+        "sector-externo"
+      ],
+      "tipo": "politica",
+      "naturaleza": "precio_tasa",
+      "modelos": [
+        "Mundell-Fleming"
+      ]
+    }
+  ]
+}

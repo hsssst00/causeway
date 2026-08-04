@@ -1,10 +1,11 @@
 'use strict';
 
 const { validarDocumento } = require('../index.js');
-const { variablesSinAgente, aristasFueraDelGrafoDelModelo, variablesDuplicadas } = require('../reglas-integridad.js');
+const { variablesSinAgente, aristasFueraDelGrafoDelModelo, variablesDuplicadas, variablesFantasmaOHuerfanas } = require('../reglas-integridad.js');
 
 const variablesIlustrativas = require('../fixtures/variables-ilustrativas.json').variables;
 const fixtureMecanismo = require('../fixtures/mecanismo-monetario-ilustrativo.json');
+const catalogoPuente = require('../fixtures/agentes-y-variables-puente.json');
 
 describe('Esquema relacion.schema.json (historia 1, E0)', () => {
   test('acepta una relación válida del mecanismo ilustrativo (Doc. 2 §5.2)', () => {
@@ -268,5 +269,26 @@ describe('Reglas de integridad (historia 3, E0 — redefinida contra fragmentos 
     };
     const violaciones = aristasFueraDelGrafoDelModelo(escenarioConRelacionFantasma, fixtureMecanismo.relaciones);
     expect(violaciones.some((v) => v.relacion === 'rel-no-existe')).toBe(true);
+  });
+});
+
+describe('Regla de integridad: consistencia agente↔variable (formaliza el script ad hoc de sprint-02.md §4)', () => {
+  test('el catálogo puente completo (6 agentes, 25 variables) no tiene inconsistencias', () => {
+    const violaciones = variablesFantasmaOHuerfanas(catalogoPuente.agentes, catalogoPuente.variables);
+    expect(violaciones).toEqual([]);
+  });
+
+  test('DETECTA una variable fantasma (referenciada por un agente pero ausente del catálogo)', () => {
+    const agentes = [{ id: 'banco-central', variables_controladas: ['oferta-monetaria', 'variable-que-no-existe'] }];
+    const variables = [{ id: 'oferta-monetaria' }];
+    const violaciones = variablesFantasmaOHuerfanas(agentes, variables);
+    expect(violaciones.some((v) => v.tipo === 'fantasma' && v.variable === 'variable-que-no-existe' && v.agente === 'banco-central')).toBe(true);
+  });
+
+  test('DETECTA una variable huérfana (en el catálogo pero no referenciada por ningún agente)', () => {
+    const agentes = [{ id: 'banco-central', variables_controladas: ['oferta-monetaria'] }];
+    const variables = [{ id: 'oferta-monetaria' }, { id: 'variable-huerfana' }];
+    const violaciones = variablesFantasmaOHuerfanas(agentes, variables);
+    expect(violaciones.some((v) => v.tipo === 'huerfana' && v.variable === 'variable-huerfana')).toBe(true);
   });
 });
