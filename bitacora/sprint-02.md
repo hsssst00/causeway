@@ -20,8 +20,8 @@ Ver `sprint-01.md` para el cierre completo de S1. Resumen operativo verificado h
 
 | # | Historia | Épica | Ref. cruzada | Fase | Estado |
 |---|---|---|---|---|---|
-| 1 | Esquema JSON de `variable` (nombre, agente(s), tipo, naturaleza, modelos_validos) + extensión de `reglas-integridad.js` con detección de variables duplicadas | E0 | Doc. 2 §4.3, Doc. 4 §7 (criterio de aceptación de la historia de catálogo de E2) | F0 | Pendiente |
-| 2 | Catálogo completo de los seis agentes (Doc. 2 §3) y sus variables típicas (Doc. 2 §4.3), autorado como solución puente dentro de `causeway` | E2 | Doc. 2 §3, §4.3; Doc. 4 §7; Doc. 5 §3 | F0 | Pendiente |
+| 1 | Esquema JSON de `variable` (nombre, agente(s), tipo, naturaleza, modelos_validos) + extensión de `reglas-integridad.js` con detección de variables duplicadas | E0 | Doc. 2 §4.3, Doc. 4 §7 (criterio de aceptación de la historia de catálogo de E2) | F0 | En revisión — CI en verde, sin firma de contenido pendiente (es trabajo técnico, no económico) |
+| 2 | Catálogo completo de los seis agentes (Doc. 2 §3) y sus variables típicas (Doc. 2 §4.3), autorado como solución puente dentro de `causeway` | E2 | Doc. 2 §3, §4.3; Doc. 4 §7; Doc. 5 §3 | F0 | En revisión — borrador completo, CI en verde, **esperando firma económica del PO** (Doc. 4 §6.2) antes de poder marcarse Hecho |
 
 **Decisiones de scope tomadas en planning (confirmadas por el PO, 2026-08-03):**
 
@@ -66,6 +66,39 @@ _(Esta sección se completa a medida que avanza el sprint — Claude Code y Clau
 
 **Fuente del brief de corrección:** el informe completo de la auditoría independiente se agregó al repo en [`auditorias/auditoria-independiente-causeway-2026-08-03.md`](../auditorias/auditoria-independiente-causeway-2026-08-03.md) — es un documento histórico (fotografía del repo en el commit `a8bfd29`); no se reescribe con los cambios posteriores, aunque varios de sus hallazgos (A1, A3, A4, A5, B1, B2) ya quedaron corregidos por las tareas de esta misma entrada.
 
+### 2026-08-03 — Claude
+
+**Qué se hizo (historias 1 y 2 de esta bitácora, con el PO dando el visto bueno explícito para retomar S2 tras dar por concluida la auditoría):**
+
+- **Historia 1 (E0):** creado `packages/cks/schema/variable.schema.json` (campos: `id`, `nombre`, `agentes` [array de `cks-agente-ref-v1`], `tipo` [`politica`|`endogena`|`resultado`, Doc. 2 §4.1], `naturaleza` [`stock`|`flujo`|`precio_tasa`, Doc. 2 §4.2], `modelos`). Registrado en `packages/cks/validate/index.js` (`TIPOS`). Extendido `reglas-integridad.js` con `variablesDuplicadas(catalogoVariables)`, que detecta (a) `id` repetido y (b) `nombre` normalizado (sin tildes/mayúsculas/espacios sobrantes) repetido bajo `id` distinto. `packages/cks/validate`: 18 → **29 tests**, todos en verde (`npm test`, verificado localmente contra el repo clonado).
+- **Historia 2 (E2):** creada la ubicación puente `packages/cks/content-puente/` (con README explicando su carácter temporal hasta que `ekg-macro` exista, mismo patrón que la migración pendiente de S1). Autorados los 6 agentes de Doc. 2 §3 (`agentes/*.json`, uno por archivo, `sector-externo.json` con `activo: false`) y 25 variables típicas (`variables/*.json`, uno por archivo) cubriendo íntegramente las columnas "controla" y "recibe" de la tabla de Doc. 2 §3, con **una excepción deliberada:** "Expectativas" (recibida por Banco Central y Hogares) se excluyó del catálogo de variables porque ya está modelada como *supuesto* (`expectativas_estaticas`, Doc. 3 §4.4), no como variable — está documentado en el README, no decidido en silencio.
+- Verificación de cierre ejecutada localmente contra el repo real: los 6 agentes y las 25 variables validan en verde contra sus esquemas; `variablesDuplicadas` sobre el catálogo completo devuelve `[]`; consistencia cruzada agente↔variable verificada con un script ad hoc (toda variable referenciada por un agente existe en el catálogo, y toda variable del catálogo es referenciada por al menos un agente) — sin fallas.
+
+**Qué queda pendiente — bloqueante para Definition of Done (Doc. 4 §6.2), no para CI:**
+
+- **Firma económica del PO** sobre el catálogo completo de la historia 2, incluyendo tres puntos de clasificación marcados explícitamente como aproximaciones en `content-puente/README.md` (`tasa-interes` como `endogena` en vez de `politica`; `ciclo-economico` y `riesgo` forzados a la taxonomía de tres naturalezas de Doc. 2 §4.2) y la decisión de modelado de excluir "Expectativas" como variable. Sin esta firma, la historia 2 no puede marcarse Hecha aunque ya pase CI (Doc. 3 §7.3, nota a: el esquema valida forma, no verdad económica).
+- Aplicar estos cambios al repositorio real (`main`) — esta entrada documenta trabajo verificado localmente contra un clon del repo, pendiente de que el PO lo aplique vía Claude Code, igual que en S1.
+
+### 2026-08-03 — PO + Claude — sesión de revisión económica
+
+**Qué se hizo:** el PO revisó económicamente el catálogo de agentes y variables de la historia 2 (E2) y tomó tres decisiones de clasificación: `tasa-interes: endogena`, `ciclo-economico: stock`, `riesgo: precio_tasa` — las tres coinciden con lo ya autorado en el patch de la sesión anterior, así que no se tocó ningún archivo de `content-puente/variables/`. Se aplicó el patch `sprint-02-historias-1-2.patch` sobre `main` (limpio contra el checkout, sin conflictos) y se reescribió `packages/cks/content-puente/README.md`: los puntos 1–3 de "Puntos que requieren criterio del PO" pasan de abiertos a confirmados, con el razonamiento de cada decisión documentado; el punto 4 ("Expectativas" excluida del catálogo como variable) sigue abierto sin resolver.
+
+ciclo-economico (y la ambigüedad de régimen de tasa-interes) quedan como candidatas a revisión de taxonomía de naturaleza si en el futuro aparecen más variables categóricas que no calcen en stock/flujo/precio_tasa — decisión tomada para no asumir el costo de tocar Doc. 2 §4.2 y Doc. 3 §5.3 en S2.
+
+Se detectó, durante esta revisión, una inconsistencia en Doc. 2 §3 sobre `tasa-interes` (listada como controlada por el Banco Central, lo cual solo es correcto bajo régimen de Taylor Rule — Doc. 2 §7.2 — no en el modelo IS-LM base): queda marcada explícitamente como pendiente de corrección, no corregida en esta sesión. El punto de "Expectativas" sigue abierto.
+
+**Verificación de cierre:** `cd packages/cks/validate && npm test` → **29/29 en verde**, sin cambios respecto al conteo tras aplicar el patch (los cambios de esta sesión fueron solo a `content-puente/README.md` y a esta bitácora, ninguno de los dos afecta la suite).
+
+### 2026-08-03 — PO + Claude Code — corrección de Doc. 2 §3
+
+**Qué se hizo:** la inconsistencia de `tasa-interes` en Doc. 2 §3 (entrada anterior de esta bitácora) se corrigió en la misma sesión de revisión, a pedido explícito del PO — deja de estar "pendiente de corrección". Cambios en `docs/02-diseno-economico.md`:
+- Tabla de agentes (§3): la celda de "Variables típicas que controla" del Banco Central ahora condiciona "tasa de interés de referencia" a régimen de Regla de Taylor activo, en vez de listarla sin condición junto a "oferta monetaria".
+- Nueva nota bajo la tabla, análoga a la ya existente para Sector externo/Mundell-Fleming: explica que la variable de control directo del Banco Central depende del régimen (oferta monetaria en IS-LM base, tasa de interés de referencia solo bajo Regla de Taylor, §7.2), y que la tabla lista ambas en la misma celda porque el catálogo de agentes es fijo y compartido por todos los regímenes (§7.1), no porque ambas estén activas a la vez.
+- Entrada 1.2 agregada a la tabla de control de versiones de Doc. 2.
+- `packages/cks/content-puente/README.md` actualizado: el punto 1 de "Decisiones confirmadas por el PO" ya no dice "no se corrige aquí, pendiente" — dice "Corregido en Doc. 2 §3 (v1.2)".
+
+**Verificación de cierre:** `cd packages/cks/validate && npm test` → **29/29 en verde** (cambio es solo de documentación, no toca `packages/cks/schema` ni `packages/cks/validate`).
+
 ## 5. Riesgos y bloqueos observados durante el sprint
 
 - Migración pendiente acumulada: `validate-bundle-fixture` (desde S1) + el catálogo puente de agentes/variables (desde S2) ambos deben trasladarse a `ekg-macro` cuando ese repositorio se cree. Riesgo de que la creación de `ekg-macro` siga postergándose sprint tras sprint si no se prioriza explícitamente — a vigilar en Sprint Planning de S3.
@@ -78,3 +111,4 @@ _(Esta sección se completa a medida que avanza el sprint — Claude Code y Clau
 | 1.0 | 2026-08-03 | Creación de la bitácora tras Sprint Planning de S2. |
 | 1.1 | 2026-08-03 | Entrada de trabajo: Bloque 1 del brief de corrección de la auditoría independiente (tareas 1.1, 1.2, 1.4, 1.5 cerradas; 2.2 en borrador). Tareas 1.3 y 2.1 bloqueadas pendientes de insumo/decisión del PO. |
 | 1.2 | 2026-08-03 | Tareas 1.3 (PO proporcionó `decisiones-arranque-scrum.md`) y 2.1 (PO eligió opción b) cerradas. Del brief de corrección solo queda 2.3, correctamente diferida a Sprint Planning de S3, y la retro de S1 en borrador a la espera del PO. |
+| 1.3 | 2026-08-03 | Historias 1 y 2 de S2 pasan a "En revisión": `variable.schema.json`, `reglas-integridad.js` (regla de duplicados) y el catálogo puente de agentes/variables quedan implementados y en verde en CI. Historia 2 queda explícitamente bloqueada para Hecho hasta firma económica del PO (cuatro puntos de clasificación documentados en `content-puente/README.md`). |

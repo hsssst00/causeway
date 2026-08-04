@@ -1,0 +1,12 @@
+{
+  "id": "impuestos",
+  "nombre": "Impuestos",
+  "agentes": [
+    "gobierno"
+  ],
+  "tipo": "politica",
+  "naturaleza": "flujo",
+  "modelos": [
+    "IS-LM"
+  ]
+}

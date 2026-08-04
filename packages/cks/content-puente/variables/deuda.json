@@ -1,0 +1,12 @@
+{
+  "id": "deuda",
+  "nombre": "Deuda",
+  "agentes": [
+    "gobierno"
+  ],
+  "tipo": "resultado",
+  "naturaleza": "stock",
+  "modelos": [
+    "IS-LM"
+  ]
+}

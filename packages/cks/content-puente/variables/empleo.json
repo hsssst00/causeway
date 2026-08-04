@@ -1,0 +1,12 @@
+{
+  "id": "empleo",
+  "nombre": "Empleo",
+  "agentes": [
+    "empresas"
+  ],
+  "tipo": "resultado",
+  "naturaleza": "stock",
+  "modelos": [
+    "IS-LM"
+  ]
+}

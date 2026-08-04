@@ -75,7 +75,7 @@ Los agentes son las entidades que controlan, originan o reciben el efecto de las
 
 | Agente | Rol conceptual | Variables típicas que controla | Variables que recibe (afectan sus decisiones) |
 |---|---|---|---|
-| **Banco Central** | Ejecuta política monetaria | Oferta monetaria, tasa de interés de referencia | Inflación, producción, expectativas |
+| **Banco Central** | Ejecuta política monetaria | Oferta monetaria (control directo en el modelo IS-LM base); tasa de interés de referencia (control directo solo bajo Regla de Taylor activa — ver nota bajo la tabla) | Inflación, producción, expectativas |
 | **Gobierno** | Ejecuta política fiscal | Gasto público, impuestos | Déficit, deuda, ciclo económico |
 | **Empresas** | Deciden producción e inversión | Inversión, producción, empleo | Tasa de interés, demanda esperada, costos |
 | **Hogares** | Deciden consumo y ahorro | Consumo, ahorro, oferta de trabajo | Ingreso, tasa de interés, expectativas |
@@ -83,6 +83,8 @@ Los agentes son las entidades que controlan, originan o reciben el efecto de las
 | **Sector externo** | Introduce relaciones con el resto del mundo | Tipo de cambio, flujos de capital, exportaciones netas | Tasa de interés doméstica vs. externa, términos de intercambio |
 
 En la versión IS-LM (cerrada, corto plazo) el **Sector externo** puede mantenerse presente en el grafo pero *inactivo* (sin aristas habilitadas), de modo que al activar Mundell-Fleming no se introduce un agente nuevo sino que se habilitan relaciones ya previstas. Esto es consistente con el principio 1.2.
+
+De forma análoga, la variable de control directo del **Banco Central** depende del régimen monetario activo, no es fija. En el modelo IS-LM base, el Banco Central controla la oferta monetaria; la tasa de interés es una variable **endógena**, determinada por el equilibrio del mercado de dinero (mecanismo completo en §5.2: un aumento de la oferta monetaria reduce la tasa de interés de equilibrio). Solo bajo una Regla de Taylor activa (§7.2) la tasa de interés de referencia pasa a ser la variable que el Banco Central fija directamente, y su rol cambia de "agente controlado por el jugador" a "agente con regla de reacción". La tabla anterior lista ambas variables en la misma celda porque el catálogo de agentes es un catálogo fijo compartido por todos los regímenes (§7.1); no implica que el Banco Central controle ambas a la vez en un mismo perfil de modelo.
 
 **Nivel 0 del juego** (Documento 1) se apoya directamente en esta capa: su objetivo es que el estudiante identifique agentes y qué controla cada uno, antes de razonar sobre relaciones causales entre variables.
 
@@ -319,3 +321,4 @@ La estructura de modelos macroeconómicos (IS-LM como base de corto plazo con pr
 |---|---|---|
 | 1.0 | 2026-08-01 | Publicación inicial |
 | 1.1 | 2026-08-01 | §11.3: se explicita que el revisor económico debe ser distinto del autor del contenido, y que la imposibilidad de garantizar esa independencia debe declararse como riesgo de gestión. Resuelve la inconsistencia con la cita de Doc. 3, §8.4. |
+| 1.2 | 2026-08-03 | §3: corrige la tabla de agentes — "tasa de interés de referencia" listada como controlada por el Banco Central solo era correcta bajo Regla de Taylor (§7.2), no en el modelo IS-LM base (donde el Banco Central controla la oferta monetaria y la tasa es endógena, §5.2). Se agrega nota explicativa bajo la tabla. Inconsistencia detectada por el PO en revisión económica de la historia 2 de S2 (`bitacora/sprint-02.md`), del mismo tipo que los hallazgos de la auditoría independiente de 2026-08-03. |

@@ -10,12 +10,14 @@ const evento = require('../schema/evento.schema.json');
 const agente = require('../schema/agente.schema.json');
 const supuesto = require('../schema/supuesto.schema.json');
 const escenario = require('../schema/escenario.schema.json');
+const variable = require('../schema/variable.schema.json');
 
 // Ref.: Doc. 3 §7.3. Cada tipo del CKS tiene su propio esquema publicado.
 // Este módulo es el punto único de validación de forma, consumido tanto
 // por la CI de `causeway` como (más adelante) por la CI de `ekg-macro`
 // (Doc. 5 §1, §3.1: "validación de esquema" del proceso de curación).
-const TIPOS = { relacion, evento, agente, supuesto, escenario };
+// `variable` se agrega en S2 (historia 1, E0, Doc. 2 §4.3).
+const TIPOS = { relacion, evento, agente, supuesto, escenario, variable };
 
 function crearValidador() {
   const ajv = new Ajv({ allErrors: true, strict: false });
@@ -37,7 +39,7 @@ const validadores = crearValidador();
 
 /**
  * Valida un documento contra el esquema CKS del tipo indicado.
- * @param {'relacion'|'evento'|'agente'|'supuesto'|'escenario'} tipo
+ * @param {'relacion'|'evento'|'agente'|'supuesto'|'escenario'|'variable'} tipo
  * @param {object} documento
  * @returns {{valido: boolean, errores: Array}}
  */

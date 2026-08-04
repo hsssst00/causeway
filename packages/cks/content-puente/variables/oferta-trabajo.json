@@ -1,0 +1,12 @@
+{
+  "id": "oferta-trabajo",
+  "nombre": "Oferta de trabajo",
+  "agentes": [
+    "hogares"
+  ],
+  "tipo": "endogena",
+  "naturaleza": "stock",
+  "modelos": [
+    "IS-LM"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": "terminos-intercambio",
+  "nombre": "Términos de intercambio",
+  "agentes": [
+    "sector-externo"
+  ],
+  "tipo": "endogena",
+  "naturaleza": "precio_tasa",
+  "modelos": [
+    "Mundell-Fleming"
+  ]
+}

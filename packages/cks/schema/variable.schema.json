@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cks-variable-v1",
+  "title": "Variable económica",
+  "description": "Ref.: Doc. 2 §4.3. Ficha mínima obligatoria de toda variable que se incorpora al grafo: nombre, agente(s) relacionado(s), tipo, naturaleza y modelo(s) en los que existe. Es lo que permite validar automáticamente si una variable nueva es realmente nueva o una existente reutilizada bajo otro nombre (Doc. 2 §4.3, error común al ampliar contenido con múltiples colaboradores) — la detección de duplicados en sí vive en packages/cks/validate/reglas-integridad.js, no en este esquema de forma.",
+  "type": "object",
+  "required": ["id", "nombre", "agentes", "tipo", "naturaleza", "modelos"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Slug único, p. ej. oferta-monetaria. Sin prefijo reservado (a diferencia de relacion/evento/escenario), consistente con los ids ya usados en fixtures/variables-ilustrativas.json y en cks-variable-ref-v1."
+    },
+    "nombre": {
+      "type": "string",
+      "description": "Nombre conceptual de la variable, p. ej. 'Oferta monetaria'."
+    },
+    "agentes": {
+      "type": "array",
+      "items": { "$ref": "cks-agente-ref-v1" },
+      "minItems": 1,
+      "description": "Agente(s) relacionado(s) con la variable (Doc. 2 §4.3): quien la controla y/o quien la recibe. La distinción control/recepción vive en agente.schema.json (variables_controladas / variables_recibidas), no aquí — este campo solo declara la relación."
+    },
+    "tipo": {
+      "enum": ["politica", "endogena", "resultado"],
+      "description": "Por origen causal (Doc. 2 §4.1): politica = exógena/controlable directamente por un agente; endogena = intermedia dentro del mecanismo de transmisión; resultado = indicador macro final."
+    },
+    "naturaleza": {
+      "enum": ["stock", "flujo", "precio_tasa"],
+      "description": "Por naturaleza (Doc. 2 §4.2): stock (medida en un punto del tiempo), flujo (medida por período), precio_tasa (tasa de interés, tipo de cambio, nivel de precios). Determina cómo se anima/visualiza (Doc. 3 §5.3)."
+    },
+    "modelos": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "Modelo(s) en los que esta variable existe, p. ej. IS-LM. Una variable propia de un agente inactivo en el modelo actual (Doc. 2 §3, p. ej. Sector externo en IS-LM puro) declara aquí el modelo donde sí se activa, no IS-LM."
+    }
+  }
+}

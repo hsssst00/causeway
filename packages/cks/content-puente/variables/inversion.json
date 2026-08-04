@@ -1,0 +1,12 @@
+{
+  "id": "inversion",
+  "nombre": "Inversión",
+  "agentes": [
+    "empresas"
+  ],
+  "tipo": "endogena",
+  "naturaleza": "flujo",
+  "modelos": [
+    "IS-LM"
+  ]
+}

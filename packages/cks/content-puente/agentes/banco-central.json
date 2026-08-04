@@ -1,0 +1,13 @@
+{
+  "id": "banco-central",
+  "nombre": "Banco Central",
+  "voz_institucional": "Banco Central de Cordavia",
+  "variables_controladas": [
+    "oferta-monetaria",
+    "tasa-interes"
+  ],
+  "variables_recibidas": [
+    "inflacion",
+    "produccion"
+  ]
+}

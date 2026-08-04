@@ -1,0 +1,15 @@
+{
+  "id": "tasa-interes",
+  "nombre": "Tasa de interés",
+  "agentes": [
+    "banco-central",
+    "empresas",
+    "hogares",
+    "sistema-financiero"
+  ],
+  "tipo": "endogena",
+  "naturaleza": "precio_tasa",
+  "modelos": [
+    "IS-LM"
+  ]
+}

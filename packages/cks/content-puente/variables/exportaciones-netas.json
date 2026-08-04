@@ -1,0 +1,12 @@
+{
+  "id": "exportaciones-netas",
+  "nombre": "Exportaciones netas",
+  "agentes": [
+    "sector-externo"
+  ],
+  "tipo": "resultado",
+  "naturaleza": "flujo",
+  "modelos": [
+    "Mundell-Fleming"
+  ]
+}

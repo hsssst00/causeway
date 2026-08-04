@@ -1,0 +1,12 @@
+{
+  "id": "riesgo",
+  "nombre": "Riesgo",
+  "agentes": [
+    "sistema-financiero"
+  ],
+  "tipo": "endogena",
+  "naturaleza": "precio_tasa",
+  "modelos": [
+    "IS-LM"
+  ]
+}

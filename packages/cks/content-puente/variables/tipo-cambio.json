@@ -1,0 +1,12 @@
+{
+  "id": "tipo-cambio",
+  "nombre": "Tipo de cambio",
+  "agentes": [
+    "sector-externo"
+  ],
+  "tipo": "politica",
+  "naturaleza": "precio_tasa",
+  "modelos": [
+    "Mundell-Fleming"
+  ]
+}

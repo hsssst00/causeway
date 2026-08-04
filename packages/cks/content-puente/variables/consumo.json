@@ -1,0 +1,12 @@
+{
+  "id": "consumo",
+  "nombre": "Consumo",
+  "agentes": [
+    "hogares"
+  ],
+  "tipo": "endogena",
+  "naturaleza": "flujo",
+  "modelos": [
+    "IS-LM"
+  ]
+}

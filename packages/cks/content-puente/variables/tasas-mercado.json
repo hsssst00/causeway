@@ -1,0 +1,12 @@
+{
+  "id": "tasas-mercado",
+  "nombre": "Tasas de mercado",
+  "agentes": [
+    "sistema-financiero"
+  ],
+  "tipo": "endogena",
+  "naturaleza": "precio_tasa",
+  "modelos": [
+    "IS-LM"
+  ]
+}

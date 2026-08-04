@@ -1,0 +1,12 @@
+{
+  "id": "ingreso",
+  "nombre": "Ingreso",
+  "agentes": [
+    "hogares"
+  ],
+  "tipo": "resultado",
+  "naturaleza": "flujo",
+  "modelos": [
+    "IS-LM"
+  ]
+}

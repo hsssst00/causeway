@@ -1,0 +1,15 @@
+{
+  "id": "empresas",
+  "nombre": "Empresas",
+  "voz_institucional": "Cámara de Industria y Comercio",
+  "variables_controladas": [
+    "inversion",
+    "produccion",
+    "empleo"
+  ],
+  "variables_recibidas": [
+    "tasa-interes",
+    "demanda-esperada",
+    "costos"
+  ]
+}

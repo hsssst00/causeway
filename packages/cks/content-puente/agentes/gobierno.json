@@ -1,0 +1,14 @@
+{
+  "id": "gobierno",
+  "nombre": "Gobierno",
+  "voz_institucional": "Ministerio de Hacienda",
+  "variables_controladas": [
+    "gasto-publico",
+    "impuestos"
+  ],
+  "variables_recibidas": [
+    "deficit",
+    "deuda",
+    "ciclo-economico"
+  ]
+}

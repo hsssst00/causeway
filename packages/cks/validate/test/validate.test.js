@@ -1,7 +1,7 @@
 'use strict';
 
 const { validarDocumento } = require('../index.js');
-const { variablesSinAgente, aristasFueraDelGrafoDelModelo } = require('../reglas-integridad.js');
+const { variablesSinAgente, aristasFueraDelGrafoDelModelo, variablesDuplicadas } = require('../reglas-integridad.js');
 
 const variablesIlustrativas = require('../fixtures/variables-ilustrativas.json').variables;
 const fixtureMecanismo = require('../fixtures/mecanismo-monetario-ilustrativo.json');
@@ -37,6 +37,132 @@ describe('Esquema relacion.schema.json (historia 1, E0)', () => {
     const relacionInvalida = { ...fixtureMecanismo.relaciones[0], polaridad: 'neutra' };
     const { valido } = validarDocumento('relacion', relacionInvalida);
     expect(valido).toBe(false);
+  });
+});
+
+describe('Esquema variable.schema.json (historia 1, E0, S2 — Doc. 2 §4.3)', () => {
+  test('acepta una variable válida con ficha mínima completa', () => {
+    const variableValida = {
+      id: 'oferta-monetaria',
+      nombre: 'Oferta monetaria',
+      agentes: ['banco-central'],
+      tipo: 'politica',
+      naturaleza: 'stock',
+      modelos: ['IS-LM'],
+    };
+    const { valido, errores } = validarDocumento('variable', variableValida);
+    expect(errores).toEqual([]);
+    expect(valido).toBe(true);
+  });
+
+  test('acepta una variable con más de un agente relacionado', () => {
+    const { valido, errores } = validarDocumento('variable', {
+      id: 'tasa-interes',
+      nombre: 'Tasa de interés',
+      agentes: ['banco-central', 'empresas', 'hogares', 'sistema-financiero'],
+      tipo: 'endogena',
+      naturaleza: 'precio_tasa',
+      modelos: ['IS-LM'],
+    });
+    expect(errores).toEqual([]);
+    expect(valido).toBe(true);
+  });
+
+  test('RECHAZA una variable sin agentes', () => {
+    const { valido } = validarDocumento('variable', {
+      id: 'gasto-publico',
+      nombre: 'Gasto público',
+      agentes: [],
+      tipo: 'politica',
+      naturaleza: 'flujo',
+      modelos: ['IS-LM'],
+    });
+    expect(valido).toBe(false);
+  });
+
+  test('RECHAZA una variable con tipo fuera del enum de Doc. 2 §4.1', () => {
+    const { valido } = validarDocumento('variable', {
+      id: 'impuestos',
+      nombre: 'Impuestos',
+      agentes: ['gobierno'],
+      tipo: 'exogena',
+      naturaleza: 'flujo',
+      modelos: ['IS-LM'],
+    });
+    expect(valido).toBe(false);
+  });
+
+  test('RECHAZA una variable con naturaleza fuera del enum de Doc. 2 §4.2', () => {
+    const { valido } = validarDocumento('variable', {
+      id: 'impuestos',
+      nombre: 'Impuestos',
+      agentes: ['gobierno'],
+      tipo: 'politica',
+      naturaleza: 'indice',
+      modelos: ['IS-LM'],
+    });
+    expect(valido).toBe(false);
+  });
+
+  test('RECHAZA una variable con id fuera del patrón de slug (minúsculas/guiones)', () => {
+    const { valido } = validarDocumento('variable', {
+      id: 'Gasto_Publico',
+      nombre: 'Gasto público',
+      agentes: ['gobierno'],
+      tipo: 'politica',
+      naturaleza: 'flujo',
+      modelos: ['IS-LM'],
+    });
+    expect(valido).toBe(false);
+  });
+
+  test('RECHAZA un agente-ref que no está en el enum de los seis agentes', () => {
+    const { valido } = validarDocumento('variable', {
+      id: 'variable-fantasma',
+      nombre: 'Variable fantasma',
+      agentes: ['agente-que-no-existe'],
+      tipo: 'endogena',
+      naturaleza: 'flujo',
+      modelos: ['IS-LM'],
+    });
+    expect(valido).toBe(false);
+  });
+});
+
+describe('Regla de integridad: variables duplicadas (historia 1, E0, S2 — Doc. 2 §4.3)', () => {
+  test('un catálogo sin duplicados no reporta violaciones', () => {
+    const catalogo = [
+      { id: 'oferta-monetaria', nombre: 'Oferta monetaria' },
+      { id: 'tasa-interes', nombre: 'Tasa de interés' },
+      { id: 'gasto-publico', nombre: 'Gasto público' },
+    ];
+    expect(variablesDuplicadas(catalogo)).toEqual([]);
+  });
+
+  test('DETECTA dos entradas con el mismo id', () => {
+    const catalogo = [
+      { id: 'inversion', nombre: 'Inversión' },
+      { id: 'inversion', nombre: 'Inversión (duplicado por error)' },
+    ];
+    const violaciones = variablesDuplicadas(catalogo);
+    expect(violaciones.some((v) => v.tipo === 'id_duplicado' && v.valor === 'inversion')).toBe(true);
+  });
+
+  test('DETECTA dos entradas con el mismo nombre normalizado bajo ids distintos (tildes/mayúsculas)', () => {
+    const catalogo = [
+      { id: 'tasa-interes', nombre: 'Tasa de Interés' },
+      { id: 'tasa-de-interes-2', nombre: 'tasa de interes' },
+    ];
+    const violaciones = variablesDuplicadas(catalogo);
+    expect(violaciones.some((v) => v.tipo === 'nombre_duplicado' && v.ids.includes('tasa-interes') && v.ids.includes('tasa-de-interes-2'))).toBe(true);
+  });
+
+  test('no confunde nombres distintos con el mismo prefijo', () => {
+    const catalogo = [
+      { id: 'tasa-interes', nombre: 'Tasa de interés' },
+      { id: 'tasas-mercado', nombre: 'Tasas de mercado' },
+    ];
+    expect(variablesDuplicadas(catalogo)).toEqual([]);
   });
 });
 

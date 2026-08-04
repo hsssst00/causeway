@@ -1,0 +1,14 @@
+{
+  "id": "hogares",
+  "nombre": "Hogares",
+  "voz_institucional": "Observatorio de Consumo de los Hogares",
+  "variables_controladas": [
+    "consumo",
+    "ahorro",
+    "oferta-trabajo"
+  ],
+  "variables_recibidas": [
+    "ingreso",
+    "tasa-interes"
+  ]
+}

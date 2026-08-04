@@ -1,0 +1,13 @@
+{
+  "id": "produccion",
+  "nombre": "Producción",
+  "agentes": [
+    "empresas",
+    "banco-central"
+  ],
+  "tipo": "resultado",
+  "naturaleza": "flujo",
+  "modelos": [
+    "IS-LM"
+  ]
+}

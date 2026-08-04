@@ -1,0 +1,12 @@
+{
+  "id": "oferta-monetaria",
+  "nombre": "Oferta monetaria",
+  "agentes": [
+    "banco-central"
+  ],
+  "tipo": "politica",
+  "naturaleza": "stock",
+  "modelos": [
+    "IS-LM"
+  ]
+}

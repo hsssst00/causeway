@@ -59,4 +59,60 @@ function aristasFueraDelGrafoDelModelo(escenario, relaciones) {
   return violaciones;
 }
 
-module.exports = { variablesSinAgente, aristasFueraDelGrafoDelModelo };
+/**
+ * Regla 3 (historia 1, E0, S2 — Doc. 2 §4.3): detección de variables
+ * duplicadas en el catálogo. Doc. 2 §4.3 señala explícitamente el riesgo
+ * que esta regla operacionaliza: "permite validar automáticamente si una
+ * variable nueva es realmente nueva o es una variable existente reutilizada
+ * bajo otro nombre — error común al ampliar contenido con múltiples
+ * colaboradores". Se detectan dos formas de duplicado:
+ *   (a) mismo `id` exacto repetido en el catálogo;
+ *   (b) mismo `nombre` normalizado (minúsculas, sin tildes, sin espacios
+ *       sobrantes) bajo `id` distinto — el caso que un id-check por sí solo
+ *       no detecta.
+ *
+ * @param {Array<{id:string, nombre:string}>} catalogoVariables
+ * @returns {Array<{tipo:'id_duplicado'|'nombre_duplicado', valor:string, ids:string[]}>}
+ *          violaciones encontradas (vacío si no hay)
+ */
+function variablesDuplicadas(catalogoVariables) {
+  const normalizarNombre = (nombre) =>
+    nombre
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // quita diacríticos (tildes)
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, ' ');
+
+  const idsVistos = new Map(); // id -> cantidad de ocurrencias
+  const nombresVistos = new Map(); // nombre normalizado -> ids que lo usan
+  const violaciones = [];
+  const idsYaReportados = new Set();
+  const nombresYaReportados = new Set();
+
+  for (const variable of catalogoVariables) {
+    idsVistos.set(variable.id, (idsVistos.get(variable.id) || 0) + 1);
+
+    const nombreNorm = normalizarNombre(variable.nombre);
+    if (!nombresVistos.has(nombreNorm)) nombresVistos.set(nombreNorm, []);
+    nombresVistos.get(nombreNorm).push(variable.id);
+  }
+
+  for (const variable of catalogoVariables) {
+    if (idsVistos.get(variable.id) > 1 && !idsYaReportados.has(variable.id)) {
+      violaciones.push({ tipo: 'id_duplicado', valor: variable.id, ids: [variable.id] });
+      idsYaReportados.add(variable.id);
+    }
+  }
+
+  for (const [nombreNorm, ids] of nombresVistos.entries()) {
+    if (ids.length > 1 && !nombresYaReportados.has(nombreNorm)) {
+      violaciones.push({ tipo: 'nombre_duplicado', valor: nombreNorm, ids });
+      nombresYaReportados.add(nombreNorm);
+    }
+  }
+
+  return violaciones;
+}
+
+module.exports = { variablesSinAgente, aristasFueraDelGrafoDelModelo, variablesDuplicadas };
